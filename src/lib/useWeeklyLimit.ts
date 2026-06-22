@@ -81,7 +81,10 @@ export function useWeeklyLimit() {
 
   const setTier = useCallback((t: Tier) => {
     setTierState(t);
-    if (typeof window !== "undefined") window.localStorage.setItem(TIER_KEY, t);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(TIER_KEY, t);
+      window.dispatchEvent(new Event("tier-changed"));
+    }
   }, []);
 
   const canConsume = useCallback(
