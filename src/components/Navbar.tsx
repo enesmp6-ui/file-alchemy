@@ -103,14 +103,14 @@ export function Navbar() {
             >
               <div className="space-y-1 px-5 py-4">
                 {LINKS.map((l) => (
-                  <a
-                    key={l.href}
-                    href={l.href}
+                  <Link
+                    key={l.to}
+                    to={l.to}
                     onClick={() => setMobileOpen(false)}
                     className="block rounded-lg px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/5"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 ))}
                 <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
                   {user ? (
