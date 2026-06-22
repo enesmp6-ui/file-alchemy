@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TIERS, useWeeklyLimit, type Tier } from "@/lib/useWeeklyLimit";
 import { Converter } from "@/components/Converter";
 import { LimitModal } from "@/components/LimitModal";
+import { Navbar } from "@/components/Navbar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
