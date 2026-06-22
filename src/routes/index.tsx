@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TIERS, useWeeklyLimit, type Tier } from "@/lib/useWeeklyLimit";
 import { Converter } from "@/components/Converter";
 import { LimitModal } from "@/components/LimitModal";
+import { Navbar } from "@/components/Navbar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,7 +53,8 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="mx-auto max-w-6xl px-5 pt-20 pb-32 sm:px-8 sm:pt-32">
+      <Navbar />
+      <div className="mx-auto max-w-6xl px-5 pt-32 pb-32 sm:px-8 sm:pt-40">
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,7 +81,8 @@ function Index() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-20 glass-card p-6 sm:p-10"
+          id="limits"
+          className="mt-20 glass-card p-6 sm:p-10 scroll-mt-24"
         >
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-wrap sm:justify-between">
             <div className="min-w-0">
@@ -156,7 +159,7 @@ function Index() {
         </motion.section>
 
         {/* Converter */}
-        <div className="mt-12">
+        <div id="converter" className="mt-12 scroll-mt-24">
           <Converter
             maxBytes={limit.maxBytes}
             canConsume={limit.canConsume}
@@ -166,7 +169,7 @@ function Index() {
         </div>
 
         {/* Plans */}
-        <section className="mt-28">
+        <section id="pricing" className="mt-28 scroll-mt-24">
           <div className="text-center">
             <h2 className="text-4xl font-thin tracking-tight sm:text-5xl">
               Kendi temponda büyü.

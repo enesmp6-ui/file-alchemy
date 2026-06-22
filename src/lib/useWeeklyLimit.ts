@@ -39,8 +39,11 @@ export function useWeeklyLimit() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const t = (window.localStorage.getItem(TIER_KEY) as Tier) || "guest";
-    setTierState(t);
+    const load = () => {
+      const t = (window.localStorage.getItem(TIER_KEY) as Tier) || "guest";
+      setTierState(t);
+    };
+    load();
     const s = readStored();
     if (s) {
       if (Date.now() - s.startedAt >= WEEK_MS) {
@@ -50,6 +53,13 @@ export function useWeeklyLimit() {
         setStartedAt(s.startedAt);
       }
     }
+    const handler = () => load();
+    window.addEventListener("tier-changed", handler);
+    window.addEventListener("storage", handler);
+    return () => {
+      window.removeEventListener("tier-changed", handler);
+      window.removeEventListener("storage", handler);
+    };
   }, []);
 
   useEffect(() => {
@@ -71,7 +81,10 @@ export function useWeeklyLimit() {
 
   const setTier = useCallback((t: Tier) => {
     setTierState(t);
-    if (typeof window !== "undefined") window.localStorage.setItem(TIER_KEY, t);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(TIER_KEY, t);
+      window.dispatchEvent(new Event("tier-changed"));
+    }
   }, []);
 
   const canConsume = useCallback(
