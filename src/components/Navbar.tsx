@@ -1,13 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/lib/AuthContext";
 import { AuthModal } from "./AuthModal";
 import { AccountPanel } from "./AccountPanel";
 
-const LINKS = [
-  { href: "#converter", label: "Dönüştürücü" },
-  { href: "#pricing", label: "Fiyatlandırma" },
-  { href: "#limits", label: "Kullanım Sınırı" },
+const LINKS: { to: "/" | "/pricing" | "/limits" | "/about"; label: string }[] = [
+  { to: "/", label: "Dönüştürücü" },
+  { to: "/pricing", label: "Fiyatlandırma" },
+  { to: "/limits", label: "Kullanım Sınırı" },
+  { to: "/about", label: "Hakkımızda" },
 ];
 
 export function Navbar() {
@@ -20,7 +22,7 @@ export function Navbar() {
     <>
       <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
-          <a href="#" className="flex shrink-0 items-center gap-2">
+          <Link to="/" className="flex shrink-0 items-center gap-2">
             <div className="grid h-7 w-7 place-items-center rounded-md bg-white text-black">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17 4a5 5 0 00-3.8 1.7A5 5 0 008 9c0 4.5 4 9 4 9s4-4.5 4-9a5 5 0 001-5z" opacity=".6" />
@@ -30,17 +32,18 @@ export function Navbar() {
             <span className="text-sm font-medium tracking-tight">
               Convert<span className="text-white/40">.Apple</span>
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
             {LINKS.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="text-xs text-white/60 transition hover:text-white"
+              <Link
+                key={l.to}
+                to={l.to}
+                activeOptions={{ exact: true }}
+                className="text-xs text-white/60 transition hover:text-white data-[status=active]:text-white"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -100,14 +103,14 @@ export function Navbar() {
             >
               <div className="space-y-1 px-5 py-4">
                 {LINKS.map((l) => (
-                  <a
-                    key={l.href}
-                    href={l.href}
+                  <Link
+                    key={l.to}
+                    to={l.to}
                     onClick={() => setMobileOpen(false)}
                     className="block rounded-lg px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/5"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 ))}
                 <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
                   {user ? (
