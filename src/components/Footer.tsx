@@ -1,19 +1,33 @@
 import { Link } from "@tanstack/react-router";
 
-const COLUMNS: { title: string; links: { label: string; to: string }[] }[] = [
+type Known =
+  | "/"
+  | "/pricing"
+  | "/limits"
+  | "/about"
+  | "/security"
+  | "/contact"
+  | "/help"
+  | "/faq"
+  | "/status"
+  | "/privacy"
+  | "/terms"
+  | "/cookies";
+
+const COLUMNS: { title: string; links: { label: string; to: Known }[] }[] = [
   {
     title: "Ürün",
     links: [
       { label: "Dönüştürücü", to: "/" },
       { label: "Fiyatlandırma", to: "/pricing" },
       { label: "Kullanım Sınırı", to: "/limits" },
+      { label: "Güvenlik", to: "/security" },
     ],
   },
   {
     title: "Şirket",
     links: [
       { label: "Hakkımızda", to: "/about" },
-      { label: "Güvenlik", to: "/security" },
       { label: "İletişim", to: "/contact" },
     ],
   },
@@ -22,7 +36,7 @@ const COLUMNS: { title: string; links: { label: string; to: string }[] }[] = [
     links: [
       { label: "Yardım Merkezi", to: "/help" },
       { label: "SSS", to: "/faq" },
-      { label: "Durum", to: "/status" },
+      { label: "Sistem Durumu", to: "/status" },
     ],
   },
   {
@@ -39,7 +53,15 @@ export function Footer() {
   return (
     <footer className="border-t border-white/10 bg-black">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-        <p className="max-w-md text-sm text-white/50">
+        <div className="flex items-center gap-2">
+          <div className="grid h-7 w-7 place-items-center rounded-md bg-gradient-to-br from-white to-white/60 text-black">
+            <span className="text-[13px] font-bold tracking-tight">i</span>
+          </div>
+          <span className="text-sm font-medium tracking-tight">
+            iFlexi<span className="text-white/40">.com</span>
+          </span>
+        </div>
+        <p className="mt-5 max-w-md text-sm text-white/50">
           Tüm dönüşümler senin cihazında. Görsellerin asla buluta gitmez,
           başka bir göz tarafından görülmez.
         </p>
@@ -53,7 +75,9 @@ export function Footer() {
               <ul className="mt-4 space-y-3">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <FooterLink to={l.to}>{l.label}</FooterLink>
+                    <Link to={l.to} className="text-sm text-white/70 transition hover:text-white">
+                      {l.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -62,49 +86,21 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-white/5 pt-6 text-[11px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Convert.Apple. Tüm hakları saklıdır.</p>
+          <p>© {new Date().getFullYear()} iFlexi.com. Tüm hakları saklıdır.</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
-            <FooterLink to="/privacy" small>
-              Gizlilik Politikası
-            </FooterLink>
-            <FooterLink to="/terms" small>
-              Kullanım Koşulları
-            </FooterLink>
-            <FooterLink to="/cookies" small>
+            <Link to="/privacy" className="text-[11px] text-white/40 transition hover:text-white">
+              Gizlilik
+            </Link>
+            <Link to="/terms" className="text-[11px] text-white/40 transition hover:text-white">
+              Koşullar
+            </Link>
+            <Link to="/cookies" className="text-[11px] text-white/40 transition hover:text-white">
               Çerezler
-            </FooterLink>
+            </Link>
             <span>Türkiye</span>
           </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterLink({
-  to,
-  children,
-  small,
-}: {
-  to: string;
-  children: React.ReactNode;
-  small?: boolean;
-}) {
-  const cls = small
-    ? "text-[11px] text-white/40 transition hover:text-white"
-    : "text-sm text-white/70 transition hover:text-white";
-  // Routes that exist as files — link via TanStack
-  const known = ["/", "/pricing", "/limits", "/about"];
-  if (known.includes(to)) {
-    return (
-      <Link to={to as "/" | "/pricing" | "/limits" | "/about"} className={cls}>
-        {children}
-      </Link>
-    );
-  }
-  return (
-    <a href={to} className={cls}>
-      {children}
-    </a>
   );
 }
