@@ -6,13 +6,13 @@ import { Footer } from "@/components/Footer";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "Hakkımızda — Convert.Apple" },
+      { title: "Hakkımızda — iFlexi" },
       {
         name: "description",
         content:
-          "Convert.Apple, gizliliği merkeze koyan bir tarayıcı içi görüntü stüdyosudur. Hikâyemizi keşfet.",
+          "iFlexi, gizliliği merkeze koyan bir tarayıcı içi görüntü stüdyosudur. Hikâyemizi keşfet.",
       },
-      { property: "og:title", content: "Hakkımızda — Convert.Apple" },
+      { property: "og:title", content: "Hakkımızda — iFlexi" },
       {
         property: "og:description",
         content: "Gizliliği merkeze koyan tarayıcı içi görüntü stüdyosu.",
@@ -44,7 +44,7 @@ function AboutPage() {
 
         <article className="mt-16 space-y-8 text-lg leading-relaxed text-white/80">
           <p>
-            Convert.Apple, dosyalarınla buluta yolculuk etmeyen, sadece senin
+            iFlexi, dosyalarınla buluta yolculuk etmeyen, sadece senin
             cihazında çalışan bir görüntü stüdyosudur. Her dönüşüm Canvas API
             üzerinde, sıfır gecikmeyle, sıfır sızıntıyla gerçekleşir.
           </p>

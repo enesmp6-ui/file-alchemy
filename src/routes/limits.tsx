@@ -7,13 +7,13 @@ import { TIERS, useWeeklyLimit, type Tier } from "@/lib/useWeeklyLimit";
 export const Route = createFileRoute("/limits")({
   head: () => ({
     meta: [
-      { title: "Kullanım Sınırı — Convert.Apple" },
+      { title: "Kullanım Sınırı — iFlexi" },
       {
         name: "description",
         content:
           "Haftalık dönüşüm limitin, dosya boyutu sınırın ve yenilenme zamanın tek bir panelde.",
       },
-      { property: "og:title", content: "Kullanım Sınırı — Convert.Apple" },
+      { property: "og:title", content: "Kullanım Sınırı — iFlexi" },
       {
         property: "og:description",
         content: "Haftalık dönüşüm limitin ve yenilenme zamanın tek bir panelde.",

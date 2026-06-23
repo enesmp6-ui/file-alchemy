@@ -9,13 +9,13 @@ import { useAuth } from "@/lib/AuthContext";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Fiyatlandırma — Convert.Apple" },
+      { title: "Fiyatlandırma — iFlexi" },
       {
         name: "description",
         content:
           "Üç sade plan, gizli ücret yok. Misafir, ücretsiz üye veya Pro — kendi temponda büyü.",
       },
-      { property: "og:title", content: "Fiyatlandırma — Convert.Apple" },
+      { property: "og:title", content: "Fiyatlandırma — iFlexi" },
       {
         property: "og:description",
         content: "Üç sade plan, gizli ücret yok. Kendi temponda büyü.",
@@ -31,7 +31,7 @@ function PricingPage() {
   const onChoose = (tier: "guest" | "free" | "pro") => {
     if (tier === "guest") return;
     if (!user) {
-      signIn("you@convert.apple", "Yeni Üye", { plan: tier });
+      signIn("you@iflexi.com", "Yeni Üye", { plan: tier });
     } else {
       updateUser({
         plan: tier,
