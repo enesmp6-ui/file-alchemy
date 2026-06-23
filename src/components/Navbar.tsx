@@ -5,10 +5,12 @@ import { useAuth } from "@/lib/AuthContext";
 import { AuthModal } from "./AuthModal";
 import { AccountPanel } from "./AccountPanel";
 
-const LINKS: { to: "/" | "/pricing" | "/limits" | "/about"; label: string }[] = [
+const LINKS: { to: "/" | "/pricing" | "/limits" | "/about" | "/security" | "/help"; label: string }[] = [
   { to: "/", label: "Dönüştürücü" },
   { to: "/pricing", label: "Fiyatlandırma" },
-  { to: "/limits", label: "Kullanım Sınırı" },
+  { to: "/limits", label: "Kullanım" },
+  { to: "/security", label: "Güvenlik" },
+  { to: "/help", label: "Yardım" },
   { to: "/about", label: "Hakkımızda" },
 ];
 
@@ -23,14 +25,11 @@ export function Navbar() {
       <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
           <Link to="/" className="flex shrink-0 items-center gap-2">
-            <div className="grid h-7 w-7 place-items-center rounded-md bg-white text-black">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 4a5 5 0 00-3.8 1.7A5 5 0 008 9c0 4.5 4 9 4 9s4-4.5 4-9a5 5 0 001-5z" opacity=".6" />
-                <circle cx="12" cy="9" r="3" />
-              </svg>
+            <div className="grid h-7 w-7 place-items-center rounded-md bg-gradient-to-br from-white to-white/60 text-black">
+              <span className="text-[13px] font-bold tracking-tight">i</span>
             </div>
             <span className="text-sm font-medium tracking-tight">
-              Convert<span className="text-white/40">.Apple</span>
+              iFlexi<span className="text-white/40">.com</span>
             </span>
           </Link>
 

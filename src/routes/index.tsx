@@ -10,12 +10,14 @@ import { Footer } from "@/components/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Convert.Apple — Tarayıcında Dönüştür, Sıkıştır, Güvende Kal" },
+      { title: "iFlexi — Tarayıcında dönüştür. Hiçbir dosya buluta gitmez." },
       {
         name: "description",
         content:
-          "PNG, JPG ve WEBP arasında dönüşüm. Her şey senin cihazında olur — dosyaların asla buluta yüklenmez.",
+          "iFlexi, PNG/JPG/WEBP dönüşümünü tamamen tarayıcında, sıfır sunucu yüklemesiyle yapar. Sürükle, bırak, tek tıkla ZIP olarak indir.",
       },
+      { property: "og:title", content: "iFlexi — Dosyaların asla cihazını terk etmez." },
+      { property: "og:description", content: "Tarayıcı içi, sunucusuz, premium dönüştürücü." },
     ],
   }),
   component: Index,
@@ -24,7 +26,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   const limit = useWeeklyLimit();
   const [modal, setModal] = useState<{ open: boolean; msg?: string }>({ open: false });
-  const percent = Math.min(100, (limit.used / limit.config.weekly) * 100);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -36,20 +37,20 @@ function Index() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center"
         >
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">
-            Tarayıcı tabanlı görüntü stüdyosu
+          <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            %100 tarayıcıda · sıfır yükleme
           </p>
-          <h1 className="mt-6 text-5xl font-thin leading-[1.02] tracking-tight sm:text-7xl md:text-[7rem]">
-            Saniyeler içinde
+          <h1 className="mt-7 text-5xl font-thin leading-[1.02] tracking-tight sm:text-7xl md:text-[7.5rem]">
+            Dosyaların
             <br />
             <span className="bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
-              dönüştür.
+              cihazından çıkmaz.
             </span>
           </h1>
-          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Sürükle, bırak, indir. PNG, JPG ve WEBP arasında geçiş yap;
-            kaliteyi sen seç, boyutu biz küçültelim. Tek bir baytın bile
-            cihazından çıkmadığını bilmenin huzuruyla.
+          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
+            Your files never leave your device. iFlexi, dönüşümü tamamen tarayıcında
+            yapar; sıraya girmek, yüklemek, beklemek yok. Sürükle, bırak, indir.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <a
@@ -67,41 +68,8 @@ function Index() {
           </div>
         </motion.header>
 
-        {/* Mini dashboard summary */}
-        <motion.section
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-20 glass-card p-6 sm:p-8"
-        >
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:items-end sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-xs uppercase tracking-widest text-white/40">
-                {limit.config.label}
-              </p>
-              <p className="mt-1 truncate text-xl font-semibold sm:text-2xl">
-                Bu hafta {limit.used} / {limit.config.weekly} dönüşüm
-              </p>
-            </div>
-            <Link
-              to="/limits"
-              className="shrink-0 rounded-full border border-white/15 px-4 py-2 text-xs text-white/80 transition hover:bg-white/5"
-            >
-              Detay
-            </Link>
-          </div>
-          <div className="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
-            <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-white to-white/40"
-              initial={{ width: 0 }}
-              animate={{ width: `${percent}%` }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </div>
-        </motion.section>
-
         {/* Converter */}
-        <div id="converter" className="mt-12 scroll-mt-24">
+        <div id="converter" className="mt-24 scroll-mt-24">
           <Converter
             maxBytes={limit.maxBytes}
             canConsume={limit.canConsume}
@@ -131,26 +99,38 @@ function Index() {
               className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
             >
               <h3 className="text-lg font-semibold tracking-tight">{b.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{b.body}</p>
+              <p className="mt-2 text-sm text-white/60">{b.body}</p>
             </div>
           ))}
         </section>
 
-        {/* CTA → pricing page */}
-        <section className="mt-28 text-center">
-          <h2 className="text-4xl font-thin tracking-tight sm:text-6xl">
-            Hız sende.
-            <br />
-            <span className="text-white/50">Plan bizde.</span>
-          </h2>
-          <p className="mx-auto mt-6 max-w-md text-muted-foreground">
-            İhtiyacın büyüdükçe planın da büyür. Üç adım, sıfır sürpriz.
-          </p>
+        {/* Section links — Apple style */}
+        <section className="mt-28 grid grid-cols-1 gap-5 md:grid-cols-2">
+          <Link
+            to="/limits"
+            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent p-10"
+          >
+            <p className="text-xs uppercase tracking-[0.2em] text-white/40">Kullanım Sınırı</p>
+            <h3 className="mt-3 text-3xl font-thin tracking-tight sm:text-4xl">
+              Haftan, tek bakışta.
+            </h3>
+            <p className="mt-3 text-sm text-white/60">Canlı sayaç, ferah panel.</p>
+            <span className="mt-6 inline-block text-sm text-white/80 transition group-hover:text-white">
+              Paneli aç →
+            </span>
+          </Link>
           <Link
             to="/pricing"
-            className="mt-10 inline-flex rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition hover:bg-white/90"
+            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent p-10"
           >
-            Planları Karşılaştır
+            <p className="text-xs uppercase tracking-[0.2em] text-white/40">Planlar</p>
+            <h3 className="mt-3 text-3xl font-thin tracking-tight sm:text-4xl">
+              Sade fiyat. Net değer.
+            </h3>
+            <p className="mt-3 text-sm text-white/60">Misafir, Ücretsiz, Pro.</p>
+            <span className="mt-6 inline-block text-sm text-white/80 transition group-hover:text-white">
+              Planları karşılaştır →
+            </span>
           </Link>
         </section>
       </main>
