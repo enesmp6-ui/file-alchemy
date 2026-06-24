@@ -14,7 +14,87 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      conversions_log: {
+        Row: {
+          created_at: string
+          file_size_bytes: number | null
+          id: string
+          source_format: string | null
+          target_format: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_size_bytes?: number | null
+          id?: string
+          source_format?: string | null
+          target_format?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_size_bytes?: number | null
+          id?: string
+          source_format?: string | null
+          target_format?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string
+          id: string
+          plan: string
+          plan_started_at: string | null
+          stripe_customer_id: string | null
+          trial_ends_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email: string
+          id: string
+          plan?: string
+          plan_started_at?: string | null
+          stripe_customer_id?: string | null
+          trial_ends_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string
+          id?: string
+          plan?: string
+          plan_started_at?: string | null
+          stripe_customer_id?: string | null
+          trial_ends_at?: string | null
+        }
+        Relationships: []
+      }
+      usage_counters: {
+        Row: {
+          files_used: number
+          id: string
+          period_start: string
+          user_id: string
+        }
+        Insert: {
+          files_used?: number
+          id?: string
+          period_start: string
+          user_id: string
+        }
+        Update: {
+          files_used?: number
+          id?: string
+          period_start?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
