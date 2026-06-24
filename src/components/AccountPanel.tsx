@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
 import { TIERS } from "@/lib/useWeeklyLimit";
 
@@ -112,24 +113,27 @@ export function AccountPanel({
 
   function ProfileTab() {
     const [name, setName] = useState(user!.name);
-    const [email, setEmail] = useState(user!.email);
+    const [saving, setSaving] = useState(false);
     return (
       <div className="space-y-5">
         <SettingsCard title="Profil Bilgileri" desc="Hesabını sana özel hale getir.">
           <Field label="İsim" value={name} onChange={setName} />
-          <Field label="E-posta" value={email} onChange={setEmail} type="email" />
+          <Field label="E-posta" value={user!.email} onChange={() => {}} type="email" />
+          <p className="-mt-1 text-[11px] text-white/40">
+            E-posta adresin hesap güvenliği için kilitlidir.
+          </p>
           <button
-            onClick={() => updateUser({ name, email })}
-            className="mt-2 self-start rounded-full bg-white px-5 py-2 text-xs font-medium text-black transition hover:bg-white/90"
+            onClick={async () => {
+              setSaving(true);
+              const res = await updateUser({ name });
+              setSaving(false);
+              if (res.error) toast.error(res.error);
+              else toast.success("Profilin güncellendi.");
+            }}
+            disabled={saving}
+            className="mt-2 self-start rounded-full bg-white px-5 py-2 text-xs font-medium text-black transition hover:bg-white/90 disabled:opacity-60"
           >
-            Kaydet
-          </button>
-        </SettingsCard>
-        <SettingsCard title="Şifre" desc="En az 8 karakter, periyodik olarak değiştir.">
-          <Field label="Mevcut Şifre" type="password" value="" onChange={() => {}} />
-          <Field label="Yeni Şifre" type="password" value="" onChange={() => {}} />
-          <button className="mt-2 self-start rounded-full border border-white/15 px-5 py-2 text-xs font-medium text-white/80 transition hover:bg-white/5">
-            Şifreyi Güncelle
+            {saving ? "Kaydediliyor…" : "Kaydet"}
           </button>
         </SettingsCard>
       </div>
@@ -163,26 +167,22 @@ export function AccountPanel({
               <span className="font-medium">{cfg.maxMB}MB</span>
             </div>
           </div>
-          {plan === "pro" ? (
-            <button
-              onClick={() => updateUser({ plan: "free", trialEndsAt: null })}
-              className="self-start rounded-full border border-white/15 px-5 py-2 text-xs font-medium text-white/80 transition hover:bg-white/5"
-            >
-              14 Günlük Denemeyi İptal Et
-            </button>
-          ) : (
-            <button
-              onClick={() =>
-                updateUser({
-                  plan: "pro",
-                  trialEndsAt: Date.now() + 14 * 24 * 60 * 60 * 1000,
-                })
-              }
-              className="self-start rounded-full bg-[#0071e3] px-5 py-2 text-xs font-medium text-white transition hover:bg-[#0077ed]"
-            >
-              Planı Yükselt
-            </button>
-          )}
+          <button
+            onClick={() =>
+              toast(
+                plan === "pro"
+                  ? "Plan iptali yakında ödeme sağlayıcımız ile entegre olacak."
+                  : "Pro yükseltmesi yakında ödeme sağlayıcımız ile entegre olacak.",
+              )
+            }
+            className={`self-start rounded-full px-5 py-2 text-xs font-medium transition ${
+              plan === "pro"
+                ? "border border-white/15 text-white/80 hover:bg-white/5"
+                : "bg-[#0071e3] text-white hover:bg-[#0077ed]"
+            }`}
+          >
+            {plan === "pro" ? "Denemeyi İptal Et" : "Pro'ya Geç"}
+          </button>
         </SettingsCard>
       </div>
     );
