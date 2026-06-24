@@ -73,7 +73,7 @@ function Index() {
           <Converter
             maxBytes={limit.maxBytes}
             canConsume={limit.canConsume}
-            consume={limit.consume}
+            consumeOne={limit.consumeOne}
             onBlocked={(msg) => setModal({ open: true, msg })}
           />
         </div>
@@ -141,8 +141,8 @@ function Index() {
         open={modal.open}
         onClose={() => setModal({ open: false })}
         onUpgrade={() => {
-          limit.setTier("pro");
           setModal({ open: false });
+          window.location.href = "/pricing";
         }}
         message={modal.msg}
       />

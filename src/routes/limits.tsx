@@ -56,20 +56,12 @@ function LimitsPage() {
                 {limit.config.label}
               </h2>
             </div>
-            <div className="flex shrink-0 gap-1 rounded-full border border-white/10 p-1">
-              {(Object.keys(TIERS) as Tier[]).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => limit.setTier(t)}
-                  className={`rounded-full px-3 py-1.5 text-xs transition ${
-                    limit.tier === t
-                      ? "bg-white text-black"
-                      : "text-white/60 hover:text-white"
-                  }`}
-                >
-                  {TIERS[t].label}
-                </button>
-              ))}
+            <div className="shrink-0 rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/60">
+              {limit.tier === "guest"
+                ? "Giriş yaparak limitini büyüt"
+                : limit.tier === "pro"
+                  ? "Pro üyeliğin aktif"
+                  : "Ücretsiz üye"}
             </div>
           </div>
 

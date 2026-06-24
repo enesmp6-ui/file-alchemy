@@ -44,15 +44,26 @@ async function convertFile(file: File, format: Format, quality: number): Promise
   });
 }
 
+export type ConsumeResult = {
+  allowed: boolean;
+  reason?: "file_too_large" | "weekly_limit_reached";
+  remaining: number;
+  maxBytes: number;
+};
+
 export function Converter({
   maxBytes,
   canConsume,
-  consume,
+  consumeOne,
   onBlocked,
 }: {
   maxBytes: number;
   canConsume: (n: number) => boolean;
-  consume: (n: number) => void;
+  consumeOne: (meta: {
+    fileSizeBytes: number;
+    sourceFormat?: string;
+    targetFormat?: string;
+  }) => Promise<ConsumeResult>;
   onBlocked: (msg: string) => void;
 }) {
   const [format, setFormat] = useState<Format>("webp");
@@ -84,10 +95,28 @@ export function Converter({
       setBusy(true);
       const out: Result[] = [];
       for (const f of arr) {
+        const sourceFormat = f.type.replace("image/", "");
+        // Reserve a slot on the server first; if denied, stop the batch.
+        const reservation = await consumeOne({
+          fileSizeBytes: f.size,
+          sourceFormat,
+          targetFormat: format,
+        });
+        if (!reservation.allowed) {
+          const msg =
+            reservation.reason === "file_too_large"
+              ? `${f.name} sunucunun izin verdiği boyutu aşıyor.`
+              : "Haftalık limitine ulaştın. Ücretsiz üye ol veya Pro'yu dene.";
+          onBlocked(msg);
+          break;
+        }
         try {
           const blob = await convertFile(f, format, quality / 100);
           out.push({
-            name: f.name.replace(/\.[^.]+$/, "") + "." + (format === "jpeg" ? "jpg" : format),
+            name:
+              f.name.replace(/\.[^.]+$/, "") +
+              "." +
+              (format === "jpeg" ? "jpg" : format),
             originalSize: f.size,
             newSize: blob.size,
             url: URL.createObjectURL(blob),
@@ -97,12 +126,12 @@ export function Converter({
           console.error(e);
         }
       }
-      consume(out.length);
       setResults((prev) => [...out, ...prev]);
       setBusy(false);
     },
-    [format, quality, maxBytes, canConsume, consume, onBlocked],
+    [format, quality, maxBytes, canConsume, consumeOne, onBlocked],
   );
+
 
   const downloadZip = async () => {
     const zip = new JSZip();
