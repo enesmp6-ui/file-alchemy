@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PLANS } from "@/lib/plans";
