@@ -41,9 +41,15 @@ export function AuthModal({
       toast.error(res.error);
       return;
     }
-    toast.success(
-      mode === "signin" ? "Hoş geldin." : "Hesabın hazır. Hoş geldin.",
-    );
+    if (mode === "signup") {
+      toast.success("Kaydın alındı.", {
+        description:
+          "E-postana gönderdiğimiz doğrulama bağlantısını açtıktan sonra giriş yapabilirsin.",
+        duration: 8000,
+      });
+    } else {
+      toast.success("Hoş geldin.");
+    }
     reset();
     onClose();
   };
