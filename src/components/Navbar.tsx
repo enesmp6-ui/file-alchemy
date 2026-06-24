@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/lib/AuthContext";
 import { AuthModal } from "./AuthModal";
@@ -19,6 +19,16 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup" | null>(null);
   const [accountOpen, setAccountOpen] = useState(false);
+
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<{ mode?: "signin" | "signup" }>).detail;
+      setAuthMode(detail?.mode ?? "signin");
+    };
+    window.addEventListener("auth:open", onOpen);
+    return () => window.removeEventListener("auth:open", onOpen);
+  }, []);
+
 
   return (
     <>

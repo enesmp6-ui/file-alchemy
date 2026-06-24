@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PLANS } from "@/lib/plans";
@@ -26,18 +27,22 @@ export const Route = createFileRoute("/pricing")({
 });
 
 function PricingPage() {
-  const { user, signIn, updateUser } = useAuth();
+  const { user } = useAuth();
 
   const onChoose = (tier: "guest" | "free" | "pro") => {
     if (tier === "guest") return;
     if (!user) {
-      signIn("you@iflexi.com", "Yeni Üye", { plan: tier });
+      window.dispatchEvent(
+        new CustomEvent("auth:open", { detail: { mode: "signup" } }),
+      );
+      return;
+    }
+    if (tier === "pro") {
+      toast(
+        "Pro yükseltmesi yakında ödeme sağlayıcımız ile entegre olacak.",
+      );
     } else {
-      updateUser({
-        plan: tier,
-        trialEndsAt:
-          tier === "pro" ? Date.now() + 14 * 24 * 60 * 60 * 1000 : null,
-      });
+      toast.success("Zaten ücretsiz üyesin.");
     }
   };
 

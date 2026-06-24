@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
 
 type Mode = "signin" | "signup";
@@ -15,19 +16,44 @@ export function AuthModal({
   onClose: () => void;
   onSwitch: (m: Mode) => void;
 }) {
-  const { signIn } = useAuth();
+  const { signInWithPassword, signUpWithPassword, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    signIn(email, name || undefined);
+  const reset = () => {
     setEmail("");
     setName("");
     setPassword("");
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    setLoading(true);
+    const res =
+      mode === "signin"
+        ? await signInWithPassword(email, password)
+        : await signUpWithPassword(email, password, name || undefined);
+    setLoading(false);
+    if (res.error) {
+      toast.error(res.error);
+      return;
+    }
+    toast.success(
+      mode === "signin" ? "Hoş geldin." : "Hesabın hazır. Hoş geldin.",
+    );
+    reset();
     onClose();
+  };
+
+  const onGoogle = async () => {
+    setLoading(true);
+    const res = await signInWithGoogle();
+    setLoading(false);
+    if (res.error) toast.error(res.error);
+    else onClose();
   };
 
   return (
@@ -61,14 +87,15 @@ export function AuthModal({
 
             <button
               type="button"
-              onClick={() => {
-                signIn("you@gmail.com", "Google Kullanıcı");
-                onClose();
-              }}
-              className="mt-7 flex w-full items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+              onClick={onGoogle}
+              disabled={loading}
+              className="mt-7 flex w-full items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden>
-                <path fill="#fff" d="M21.35 11.1H12v2.9h5.35c-.23 1.4-1.62 4.1-5.35 4.1-3.22 0-5.85-2.67-5.85-5.95S8.78 6.2 12 6.2c1.83 0 3.06.78 3.76 1.45l2.57-2.47C16.7 3.66 14.55 2.7 12 2.7 6.86 2.7 2.7 6.86 2.7 12s4.16 9.3 9.3 9.3c5.37 0 8.92-3.77 8.92-9.07 0-.6-.06-1.05-.15-1.13z"/>
+                <path
+                  fill="#fff"
+                  d="M21.35 11.1H12v2.9h5.35c-.23 1.4-1.62 4.1-5.35 4.1-3.22 0-5.85-2.67-5.85-5.95S8.78 6.2 12 6.2c1.83 0 3.06.78 3.76 1.45l2.57-2.47C16.7 3.66 14.55 2.7 12 2.7 6.86 2.7 2.7 6.86 2.7 12s4.16 9.3 9.3 9.3c5.37 0 8.92-3.77 8.92-9.07 0-.6-.06-1.05-.15-1.13z"
+                />
               </svg>
               Google ile Devam Et
             </button>
@@ -93,7 +120,7 @@ export function AuthModal({
                 type="email"
                 value={email}
                 onChange={setEmail}
-                placeholder="ornek@apple.com"
+                placeholder="ornek@iflexi.com"
                 required
               />
               <AuthInput
@@ -102,12 +129,18 @@ export function AuthModal({
                 value={password}
                 onChange={setPassword}
                 placeholder="••••••••"
+                required
               />
               <button
                 type="submit"
-                className="mt-2 w-full rounded-full bg-[#0071e3] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#0077ed]"
+                disabled={loading}
+                className="mt-2 w-full rounded-full bg-[#0071e3] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#0077ed] disabled:opacity-60"
               >
-                {mode === "signin" ? "Giriş Yap" : "E-posta ile Kayıt Ol"}
+                {loading
+                  ? "Bir saniye…"
+                  : mode === "signin"
+                    ? "Giriş Yap"
+                    : "E-posta ile Kayıt Ol"}
               </button>
             </form>
 

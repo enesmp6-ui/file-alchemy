@@ -1,6 +1,18 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import type { Session } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 
 export type User = {
+  id: string;
   name: string;
   email: string;
   plan: "free" | "pro";
@@ -9,12 +21,19 @@ export type User = {
 
 type AuthContextValue = {
   user: User | null;
-  signIn: (email: string, name?: string, opts?: { plan?: "free" | "pro" }) => void;
-  signOut: () => void;
-  updateUser: (u: Partial<User>) => void;
+  loading: boolean;
+  signInWithPassword: (email: string, password: string) => Promise<{ error?: string }>;
+  signUpWithPassword: (
+    email: string,
+    password: string,
+    name?: string,
+  ) => Promise<{ error?: string }>;
+  signInWithGoogle: () => Promise<{ error?: string }>;
+  signOut: () => Promise<void>;
+  updateUser: (u: Partial<Pick<User, "name">>) => Promise<{ error?: string }>;
+  refresh: () => Promise<void>;
 };
 
-const KEY = "auth:user";
 const TIER_KEY = "wlimit:tier";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -25,59 +44,171 @@ function setTierExternal(tier: "guest" | "free" | "pro") {
   window.dispatchEvent(new Event("tier-changed"));
 }
 
+type ProfileRow = {
+  id: string;
+  email: string;
+  display_name: string | null;
+  plan: "free" | "pro";
+  trial_ends_at: string | null;
+};
+
+async function loadProfile(session: Session): Promise<User | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, email, display_name, plan, trial_ends_at")
+    .eq("id", session.user.id)
+    .maybeSingle<ProfileRow>();
+
+  if (error) {
+    console.error("[auth] profile load failed", error);
+  }
+
+  const meta = session.user.user_metadata as Record<string, unknown> | undefined;
+  const fallbackName =
+    (meta?.display_name as string | undefined) ??
+    (meta?.full_name as string | undefined) ??
+    (meta?.name as string | undefined) ??
+    session.user.email?.split("@")[0] ??
+    "Kullanıcı";
+
+  if (!data) {
+    return {
+      id: session.user.id,
+      email: session.user.email ?? "",
+      name: fallbackName,
+      plan: "free",
+      trialEndsAt: null,
+    };
+  }
+
+  return {
+    id: data.id,
+    email: data.email,
+    name: data.display_name || fallbackName,
+    plan: data.plan,
+    trialEndsAt: data.trial_ends_at ? new Date(data.trial_ends_at).getTime() : null,
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const applySession = useCallback(async (session: Session | null) => {
+    if (!session) {
+      setUser(null);
+      setTierExternal("guest");
+      return;
+    }
+    const u = await loadProfile(session);
+    setUser(u);
+    setTierExternal(u?.plan ?? "free");
+  }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const raw = window.localStorage.getItem(KEY);
-      if (raw) {
-        const u = JSON.parse(raw) as User;
-        setUser(u);
-        setTierExternal(u.plan);
-      }
-    } catch {}
-  }, []);
+    let mounted = true;
 
-  const persist = (u: User | null) => {
-    setUser(u);
-    if (typeof window === "undefined") return;
-    if (u) window.localStorage.setItem(KEY, JSON.stringify(u));
-    else window.localStorage.removeItem(KEY);
-  };
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      // Defer async work to avoid deadlocks in the listener.
+      setTimeout(() => {
+        if (mounted) void applySession(session);
+      }, 0);
+    });
 
-  const signIn = useCallback<AuthContextValue["signIn"]>((email, name, opts) => {
-    const plan = opts?.plan ?? "free";
-    const u: User = {
-      email,
-      name: name || email.split("@")[0],
-      plan,
-      trialEndsAt: plan === "pro" ? Date.now() + 14 * 24 * 60 * 60 * 1000 : null,
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      void applySession(data.session).finally(() => mounted && setLoading(false));
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
     };
-    persist(u);
-    setTierExternal(plan);
+  }, [applySession]);
+
+  const signInWithPassword: AuthContextValue["signInWithPassword"] = useCallback(
+    async (email, password) => {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return { error: error.message };
+      return {};
+    },
+    [],
+  );
+
+  const signUpWithPassword: AuthContextValue["signUpWithPassword"] = useCallback(
+    async (email, password, name) => {
+      const redirect =
+        typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirect,
+          data: name ? { display_name: name } : undefined,
+        },
+      });
+      if (error) return { error: error.message };
+      return {};
+    },
+    [],
+  );
+
+  const signInWithGoogle: AuthContextValue["signInWithGoogle"] = useCallback(async () => {
+    const redirect =
+      typeof window !== "undefined" ? window.location.origin : undefined;
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: redirect,
+    });
+    if (result.error) return { error: (result.error as Error).message };
+    return {};
   }, []);
 
-  const signOut = useCallback(() => {
-    persist(null);
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
+    setUser(null);
     setTierExternal("guest");
   }, []);
 
-  const updateUser = useCallback((patch: Partial<User>) => {
-    setUser((prev) => {
-      if (!prev) return prev;
-      const next = { ...prev, ...patch };
-      if (typeof window !== "undefined")
-        window.localStorage.setItem(KEY, JSON.stringify(next));
-      if (patch.plan) setTierExternal(patch.plan);
-      return next;
-    });
-  }, []);
+  const refresh = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    await applySession(data.session);
+  }, [applySession]);
 
-  const value = useMemo(
-    () => ({ user, signIn, signOut, updateUser }),
-    [user, signIn, signOut, updateUser],
+  const updateUser: AuthContextValue["updateUser"] = useCallback(
+    async (patch) => {
+      if (!user) return { error: "Oturum yok" };
+      const { error } = await supabase
+        .from("profiles")
+        .update({ display_name: patch.name ?? user.name })
+        .eq("id", user.id);
+      if (error) return { error: error.message };
+      setUser({ ...user, ...patch });
+      return {};
+    },
+    [user],
+  );
+
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      loading,
+      signInWithPassword,
+      signUpWithPassword,
+      signInWithGoogle,
+      signOut,
+      updateUser,
+      refresh,
+    }),
+    [
+      user,
+      loading,
+      signInWithPassword,
+      signUpWithPassword,
+      signInWithGoogle,
+      signOut,
+      updateUser,
+      refresh,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
