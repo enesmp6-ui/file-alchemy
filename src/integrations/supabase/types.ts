@@ -41,6 +41,30 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_usage: {
+        Row: {
+          created_at: string
+          files_used: number
+          id: string
+          ip_hash: string
+          period_start: string
+        }
+        Insert: {
+          created_at?: string
+          files_used?: number
+          id?: string
+          ip_hash: string
+          period_start: string
+        }
+        Update: {
+          created_at?: string
+          files_used?: number
+          id?: string
+          ip_hash?: string
+          period_start?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
