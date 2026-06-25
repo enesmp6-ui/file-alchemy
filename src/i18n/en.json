@@ -1,0 +1,113 @@
+{
+  "brand": { "tagline": "Convert in your browser. Nothing ever leaves your device." },
+  "nav": {
+    "converter": "Converter",
+    "pricing": "Pricing",
+    "usage": "Usage",
+    "security": "Security",
+    "help": "Help",
+    "about": "About",
+    "account": "Account",
+    "signIn": "Sign in",
+    "signUp": "Get started",
+    "signOut": "Sign out",
+    "menu": "Menu",
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "hero": {
+    "eyebrow": "100% in your browser · zero upload",
+    "titleA": "Your files",
+    "titleB": "never leave your device.",
+    "subtitle": "iFlexi runs every conversion locally in your browser. No queues, no uploads, no waiting. Drag, drop, download.",
+    "primary": "Start converting",
+    "secondary": "See plans"
+  },
+  "common": {
+    "free": "Free",
+    "pro": "Pro",
+    "guest": "Guest",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading…",
+    "soon": "Coming soon",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "account": {
+    "title": "Account",
+    "subtitle": "Manage your plan, usage, and preferences.",
+    "tabs": {
+      "overview": "Overview",
+      "history": "History",
+      "billing": "Plan & billing",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "security": "Security"
+    },
+    "overview": {
+      "weeklyUsage": "This week's usage",
+      "usedOf": "{used} of {limit} files used",
+      "resetIn": "Resets in {days}d {hours}h",
+      "stats": {
+        "totalConversions": "Total conversions",
+        "thisMonth": "This month",
+        "avgSize": "Avg. file size"
+      },
+      "plan": "Current plan",
+      "upgrade": "Upgrade to Pro",
+      "manage": "Manage subscription"
+    },
+    "history": {
+      "title": "Conversion history",
+      "empty": "No conversions yet. Once you convert files, they'll appear here.",
+      "cols": { "date": "Date", "source": "From", "target": "To", "size": "Size" },
+      "filter": { "all": "All formats", "range": "Date range" }
+    },
+    "billing": {
+      "currentPlan": "Current plan",
+      "invoices": "Invoices",
+      "noInvoices": "No invoices yet.",
+      "renews": "Renews on {date}",
+      "cancel": "Cancel subscription"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "empty": "You're all caught up.",
+      "markRead": "Mark as read"
+    },
+    "settings": {
+      "profile": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "emailLocked": "Email is locked for account security.",
+      "language": "Language",
+      "theme": "Theme",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "dangerZone": "Danger zone",
+      "deleteAccount": "Delete account",
+      "deleteConfirm": "This will permanently delete your account and all related data. This cannot be undone.",
+      "deleteCta": "I understand, delete my account"
+    },
+    "security": {
+      "sessions": "Active sessions",
+      "thisDevice": "This device",
+      "changePassword": "Change password",
+      "twoFactor": "Two-factor authentication",
+      "twoFactorDesc": "Add an extra layer of security to your account."
+    }
+  },
+  "footer": {
+    "tagline": "Every conversion happens on your device. Your files are never uploaded, never seen.",
+    "product": "Product",
+    "company": "Company",
+    "resources": "Resources",
+    "legal": "Legal",
+    "rights": "All rights reserved."
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "brand": { "tagline": "Tarayıcında dönüştür. Hiçbir şey cihazından çıkmaz." },
+  "nav": {
+    "converter": "Dönüştürücü",
+    "pricing": "Fiyatlandırma",
+    "usage": "Kullanım",
+    "security": "Güvenlik",
+    "help": "Yardım",
+    "about": "Hakkımızda",
+    "account": "Hesabım",
+    "signIn": "Giriş Yap",
+    "signUp": "Ücretsiz Başla",
+    "signOut": "Çıkış Yap",
+    "menu": "Menü",
+    "theme": "Tema",
+    "language": "Dil"
+  },
+  "hero": {
+    "eyebrow": "%100 tarayıcıda · sıfır yükleme",
+    "titleA": "Dosyaların",
+    "titleB": "cihazından çıkmaz.",
+    "subtitle": "iFlexi tüm dönüşümü tarayıcında yapar. Sıraya girmek, yüklemek, beklemek yok. Sürükle, bırak, indir.",
+    "primary": "Dönüştürmeye Başla",
+    "secondary": "Planları Gör"
+  },
+  "common": {
+    "free": "Ücretsiz",
+    "pro": "Pro",
+    "guest": "Misafir",
+    "save": "Kaydet",
+    "saving": "Kaydediliyor…",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "loading": "Yükleniyor…",
+    "soon": "Çok yakında",
+    "back": "Geri",
+    "next": "İleri",
+    "previous": "Önceki"
+  },
+  "account": {
+    "title": "Hesabım",
+    "subtitle": "Planını, kullanımını ve tercihlerini yönet.",
+    "tabs": {
+      "overview": "Genel Bakış",
+      "history": "Kullanım Geçmişi",
+      "billing": "Plan & Faturalama",
+      "notifications": "Bildirimler",
+      "settings": "Ayarlar",
+      "security": "Güvenlik"
+    },
+    "overview": {
+      "weeklyUsage": "Bu haftaki kullanımın",
+      "usedOf": "{used}/{limit} dosya kullanıldı",
+      "resetIn": "{days} gün {hours} saat sonra yenilenir",
+      "stats": {
+        "totalConversions": "Toplam dönüşüm",
+        "thisMonth": "Bu ay",
+        "avgSize": "Ort. dosya boyutu"
+      },
+      "plan": "Mevcut plan",
+      "upgrade": "Pro'ya Yükselt",
+      "manage": "Aboneliği Yönet"
+    },
+    "history": {
+      "title": "Dönüşüm geçmişi",
+      "empty": "Henüz dönüşüm yapmadın. Yaptığında burada listelenecek.",
+      "cols": { "date": "Tarih", "source": "Kaynak", "target": "Hedef", "size": "Boyut" },
+      "filter": { "all": "Tüm formatlar", "range": "Tarih aralığı" }
+    },
+    "billing": {
+      "currentPlan": "Mevcut plan",
+      "invoices": "Faturalar",
+      "noInvoices": "Henüz fatura yok.",
+      "renews": "{date} tarihinde yenilenir",
+      "cancel": "Aboneliği İptal Et"
+    },
+    "notifications": {
+      "title": "Bildirimler",
+      "empty": "Yeni bildirim yok.",
+      "markRead": "Okundu olarak işaretle"
+    },
+    "settings": {
+      "profile": "Profil",
+      "name": "İsim",
+      "email": "E-posta",
+      "emailLocked": "E-posta adresin hesap güvenliği için kilitlidir.",
+      "language": "Dil",
+      "theme": "Tema",
+      "themeLight": "Açık",
+      "themeDark": "Koyu",
+      "dangerZone": "Tehlikeli alan",
+      "deleteAccount": "Hesabı Sil",
+      "deleteConfirm": "Bu işlem hesabını ve tüm verilerini kalıcı olarak siler. Geri alınamaz.",
+      "deleteCta": "Anladım, hesabımı sil"
+    },
+    "security": {
+      "sessions": "Aktif oturumlar",
+      "thisDevice": "Bu cihaz",
+      "changePassword": "Şifre Değiştir",
+      "twoFactor": "İki adımlı doğrulama",
+      "twoFactorDesc": "Hesabına ek bir güvenlik katmanı ekle."
+    }
+  },
+  "footer": {
+    "tagline": "Tüm dönüşümler senin cihazında. Görsellerin asla buluta gitmez, başka bir göz tarafından görülmez.",
+    "product": "Ürün",
+    "company": "Şirket",
+    "resources": "Kaynaklar",
+    "legal": "Yasal",
+    "rights": "Tüm hakları saklıdır."
+  }
+}
