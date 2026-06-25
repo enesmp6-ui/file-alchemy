@@ -1,24 +1,28 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Sun, Moon, Menu as MenuIcon, X as CloseIcon, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
+import { useTheme } from "@/lib/ThemeContext";
+import { useI18n, type Locale } from "@/lib/I18nContext";
 import { AuthModal } from "./AuthModal";
-import { AccountPanel } from "./AccountPanel";
-
-const LINKS: { to: "/" | "/pricing" | "/limits" | "/about" | "/security" | "/help"; label: string }[] = [
-  { to: "/", label: "Dönüştürücü" },
-  { to: "/pricing", label: "Fiyatlandırma" },
-  { to: "/limits", label: "Kullanım" },
-  { to: "/security", label: "Güvenlik" },
-  { to: "/help", label: "Yardım" },
-  { to: "/about", label: "Hakkımızda" },
-];
 
 export function Navbar() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const { locale, setLocale, t } = useI18n();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup" | null>(null);
-  const [accountOpen, setAccountOpen] = useState(false);
+
+  const LINKS: { to: "/" | "/pricing" | "/limits" | "/security" | "/help" | "/about"; label: string }[] = [
+    { to: "/", label: t("nav.converter") },
+    { to: "/pricing", label: t("nav.pricing") },
+    { to: "/limits", label: t("nav.usage") },
+    { to: "/security", label: t("nav.security") },
+    { to: "/help", label: t("nav.help") },
+    { to: "/about", label: t("nav.about") },
+  ];
 
   useEffect(() => {
     const onOpen = (e: Event) => {
@@ -29,76 +33,95 @@ export function Navbar() {
     return () => window.removeEventListener("auth:open", onOpen);
   }, []);
 
+  const otherLocale: Locale = locale === "en" ? "tr" : "en";
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-8">
-          <Link to="/" className="flex shrink-0 items-center gap-2">
-            <div className="grid h-7 w-7 place-items-center rounded-md bg-gradient-to-br from-white to-white/60 text-black">
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-border/60 bg-background/75 backdrop-blur-xl backdrop-saturate-150">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
+          <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="iFlexi">
+            <div className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
               <span className="text-[13px] font-bold tracking-tight">i</span>
             </div>
-            <span className="text-sm font-medium tracking-tight">
-              iFlexi<span className="text-white/40">.com</span>
+            <span className="text-sm font-semibold tracking-tight">
+              iFlexi<span className="text-muted-foreground">.com</span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-7 md:flex">
             {LINKS.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
                 activeOptions={{ exact: true }}
-                className="text-xs text-white/60 transition hover:text-white data-[status=active]:text-white"
+                className="text-xs font-medium text-muted-foreground transition hover:text-foreground data-[status=active]:text-foreground"
               >
                 {l.label}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-1.5 md:flex">
+            <button
+              onClick={() => setLocale(otherLocale)}
+              className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition hover:bg-muted hover:text-foreground"
+              aria-label={t("nav.language")}
+            >
+              {locale.toUpperCase()}
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
+              aria-label={t("nav.theme")}
+            >
+              {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+            <span className="mx-1 h-5 w-px bg-border" />
             {user ? (
               <button
-                onClick={() => setAccountOpen(true)}
-                className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-white/30 to-white/10 text-sm font-semibold text-white transition hover:from-white/40"
-                aria-label="Hesabım"
+                onClick={() => navigate({ to: "/account" })}
+                className="flex items-center gap-2 rounded-full bg-muted px-1 py-1 pr-3 text-xs font-medium text-foreground transition hover:bg-accent"
+                aria-label={t("nav.account")}
               >
-                {user.name.charAt(0).toUpperCase()}
+                <span className="grid h-7 w-7 place-items-center rounded-full bg-foreground text-[11px] font-semibold text-background">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+                <span className="max-w-[8rem] truncate">{user.name}</span>
               </button>
             ) : (
               <>
                 <button
                   onClick={() => setAuthMode("signin")}
-                  className="text-xs text-white/70 transition hover:text-white"
+                  className="rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
                 >
-                  Giriş Yap
+                  {t("nav.signIn")}
                 </button>
                 <button
                   onClick={() => setAuthMode("signup")}
-                  className="rounded-full bg-[#0071e3] px-4 py-1.5 text-xs font-medium text-white transition hover:bg-[#0077ed]"
+                  className="rounded-full bg-foreground px-4 py-1.5 text-xs font-semibold text-background transition hover:opacity-90"
                 >
-                  Kayıt Ol
+                  {t("nav.signUp")}
                 </button>
               </>
             )}
           </div>
 
-          <button
-            onClick={() => setMobileOpen((v) => !v)}
-            className="rounded-md p-2 text-white/70 md:hidden"
-            aria-label="Menü"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              {mobileOpen ? (
-                <path d="M6 6l12 12M18 6L6 18" />
-              ) : (
-                <>
-                  <path d="M4 7h16" />
-                  <path d="M4 17h16" />
-                </>
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center gap-1 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted"
+              aria-label={t("nav.theme")}
+            >
+              {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+            <button
+              onClick={() => setMobileOpen((v) => !v)}
+              className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted"
+              aria-label={t("nav.menu")}
+            >
+              {mobileOpen ? <CloseIcon size={18} /> : <MenuIcon size={18} />}
+            </button>
+          </div>
         </div>
 
         <AnimatePresence>
@@ -108,30 +131,48 @@ export function Navbar() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden border-t border-white/10 bg-black/90 backdrop-blur-md md:hidden"
+              className="overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl md:hidden"
             >
-              <div className="space-y-1 px-5 py-4">
+              <div className="space-y-1 px-4 py-4">
                 {LINKS.map((l) => (
                   <Link
                     key={l.to}
                     to={l.to}
                     onClick={() => setMobileOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 text-sm text-white/80 transition hover:bg-white/5"
+                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition hover:bg-muted"
                   >
                     {l.label}
                   </Link>
                 ))}
-                <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
+                <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
+                  <button
+                    onClick={() => setLocale(otherLocale)}
+                    className="rounded-full bg-muted px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground"
+                  >
+                    {locale.toUpperCase()} → {otherLocale.toUpperCase()}
+                  </button>
+                </div>
+                <div className="mt-3 flex gap-2 border-t border-border pt-3">
                   {user ? (
-                    <button
-                      onClick={() => {
-                        setAccountOpen(true);
-                        setMobileOpen(false);
-                      }}
-                      className="flex-1 rounded-full border border-white/15 px-4 py-2.5 text-sm text-white/80"
-                    >
-                      Hesabım
-                    </button>
+                    <>
+                      <Link
+                        to="/account"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-muted px-4 py-2.5 text-sm font-medium text-foreground"
+                      >
+                        <UserIcon size={14} />
+                        {t("nav.account")}
+                      </Link>
+                      <button
+                        onClick={() => {
+                          void signOut();
+                          setMobileOpen(false);
+                        }}
+                        className="rounded-full border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground"
+                      >
+                        {t("nav.signOut")}
+                      </button>
+                    </>
                   ) : (
                     <>
                       <button
@@ -139,18 +180,18 @@ export function Navbar() {
                           setAuthMode("signin");
                           setMobileOpen(false);
                         }}
-                        className="flex-1 rounded-full border border-white/15 px-4 py-2.5 text-sm text-white/80"
+                        className="flex-1 rounded-full border border-border px-4 py-2.5 text-sm font-medium text-foreground"
                       >
-                        Giriş Yap
+                        {t("nav.signIn")}
                       </button>
                       <button
                         onClick={() => {
                           setAuthMode("signup");
                           setMobileOpen(false);
                         }}
-                        className="flex-1 rounded-full bg-[#0071e3] px-4 py-2.5 text-sm font-medium text-white"
+                        className="flex-1 rounded-full bg-foreground px-4 py-2.5 text-sm font-semibold text-background"
                       >
-                        Kayıt Ol
+                        {t("nav.signUp")}
                       </button>
                     </>
                   )}
@@ -167,7 +208,6 @@ export function Navbar() {
         onClose={() => setAuthMode(null)}
         onSwitch={(m) => setAuthMode(m)}
       />
-      <AccountPanel open={accountOpen} onClose={() => setAccountOpen(false)} />
     </>
   );
 }
