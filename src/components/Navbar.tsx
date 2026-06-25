@@ -202,7 +202,12 @@ export function Navbar() {
         </AnimatePresence>
       </header>
 
-      <AuthModal mode={authMode} onClose={() => setAuthMode(null)} />
+      <AuthModal
+        open={authMode !== null}
+        mode={authMode ?? "signin"}
+        onClose={() => setAuthMode(null)}
+        onSwitch={(m) => setAuthMode(m)}
+      />
     </>
   );
 }
