@@ -6,6 +6,7 @@ import { Converter } from "@/components/Converter";
 import { LimitModal } from "@/components/LimitModal";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { useI18n } from "@/lib/I18nContext";
 
 export const Route = createFileRoute("/")({
   head: () => ({
