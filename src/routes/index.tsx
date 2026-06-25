@@ -26,10 +26,11 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const limit = useWeeklyLimit();
+  const { t } = useI18n();
   const [modal, setModal] = useState<{ open: boolean; msg?: string }>({ open: false });
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <main className="mx-auto max-w-6xl px-5 pt-32 pb-32 sm:px-8 sm:pt-40">
         <motion.header
@@ -38,38 +39,36 @@ function Index() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center"
         >
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            %100 tarayıcıda · sıfır yükleme
+          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            {t("hero.eyebrow")}
           </p>
-          <h1 className="mt-7 text-5xl font-thin leading-[1.02] tracking-tight sm:text-7xl md:text-[7.5rem]">
-            Dosyaların
+          <h1 className="mt-7 text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl md:text-[6.5rem]">
+            {t("hero.titleA")}
             <br />
-            <span className="bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent">
-              cihazından çıkmaz.
+            <span className="bg-gradient-to-b from-foreground to-foreground/40 bg-clip-text text-transparent">
+              {t("hero.titleB")}
             </span>
           </h1>
-          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
-            Your files never leave your device. iFlexi, dönüşümü tamamen tarayıcında
-            yapar; sıraya girmek, yüklemek, beklemek yok. Sürükle, bırak, indir.
+          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {t("hero.subtitle")}
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#converter"
-              className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-white/90"
+              className="rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition hover:opacity-90"
             >
-              Dönüştürmeye Başla
+              {t("hero.primary")}
             </a>
             <Link
               to="/pricing"
-              className="rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-white/80 transition hover:bg-white/5"
+              className="rounded-full border border-border px-6 py-3 text-sm font-medium text-foreground transition hover:bg-muted"
             >
-              Planları Gör
+              {t("hero.secondary")}
             </Link>
           </div>
         </motion.header>
 
-        {/* Converter */}
         <div id="converter" className="mt-24 scroll-mt-24">
           <Converter
             maxBytes={limit.maxBytes}
@@ -79,64 +78,67 @@ function Index() {
           />
         </div>
 
-        {/* Quality strip */}
         <section className="mt-28 grid grid-cols-1 gap-5 sm:grid-cols-3">
           {[
             {
-              title: "Buluta sıfır gönderim.",
-              body: "Dönüşüm Canvas API ile cihazında olur. Görsellerin senin yanından ayrılmaz.",
+              title: "Zero cloud upload",
+              body: "Conversion happens locally via the Canvas API. Your files never leave your device.",
             },
             {
-              title: "Sinematik ince ayar.",
-              body: "Kalite kaydırıcısıyla her formatı milimetrik kontrol et; gerçek zamanlı boyut karşılaştırması.",
+              title: "Cinematic fine-tuning",
+              body: "Dial in quality with millimetric precision and watch file size update in real time.",
             },
             {
-              title: "Topla, tek tık ZIP.",
-              body: "Onlarca dosyayı sıkıştır, tek bir paket olarak indir. Klasör düzenin sende kalır.",
+              title: "Batch · one-click ZIP",
+              body: "Compress dozens of files into one neat package — your folder structure stays yours.",
             },
           ].map((b) => (
             <div
               key={b.title}
-              className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+              className="rounded-2xl border border-border bg-card p-6 shadow-sm"
             >
               <h3 className="text-lg font-semibold tracking-tight">{b.title}</h3>
-              <p className="mt-2 text-sm text-white/60">{b.body}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{b.body}</p>
             </div>
           ))}
         </section>
 
-        {/* Section links — Apple style */}
         <section className="mt-28 grid grid-cols-1 gap-5 md:grid-cols-2">
           <Link
             to="/limits"
-            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent p-10"
+            className="group relative overflow-hidden rounded-3xl border border-border bg-gradient-to-b from-muted/60 to-transparent p-10 transition hover:bg-muted/30"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-white/40">Kullanım Sınırı</p>
-            <h3 className="mt-3 text-3xl font-thin tracking-tight sm:text-4xl">
-              Haftan, tek bakışta.
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {t("nav.usage")}
+            </p>
+            <h3 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Your week, at a glance.
             </h3>
-            <p className="mt-3 text-sm text-white/60">Canlı sayaç, ferah panel.</p>
-            <span className="mt-6 inline-block text-sm text-white/80 transition group-hover:text-white">
-              Paneli aç →
+            <p className="mt-3 text-sm text-muted-foreground">Live counter, breathing room.</p>
+            <span className="mt-6 inline-block text-sm font-medium text-foreground/80 transition group-hover:text-foreground">
+              Open panel →
             </span>
           </Link>
           <Link
             to="/pricing"
-            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent p-10"
+            className="group relative overflow-hidden rounded-3xl border border-border bg-gradient-to-b from-muted/60 to-transparent p-10 transition hover:bg-muted/30"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-white/40">Planlar</p>
-            <h3 className="mt-3 text-3xl font-thin tracking-tight sm:text-4xl">
-              Sade fiyat. Net değer.
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {t("nav.pricing")}
+            </p>
+            <h3 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Simple pricing. Clear value.
             </h3>
-            <p className="mt-3 text-sm text-white/60">Misafir, Ücretsiz, Pro.</p>
-            <span className="mt-6 inline-block text-sm text-white/80 transition group-hover:text-white">
-              Planları karşılaştır →
+            <p className="mt-3 text-sm text-muted-foreground">Guest · Free · Pro.</p>
+            <span className="mt-6 inline-block text-sm font-medium text-foreground/80 transition group-hover:text-foreground">
+              Compare plans →
             </span>
           </Link>
         </section>
       </main>
 
       <Footer />
+
 
       <LimitModal
         open={modal.open}
