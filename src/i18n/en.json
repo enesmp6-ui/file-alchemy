@@ -36,7 +36,11 @@
     "soon": "Coming soon",
     "back": "Back",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "copy": "Copy",
+    "copied": "Copied to clipboard",
+    "create": "Create",
+    "revoke": "Revoke"
   },
   "account": {
     "title": "Account",
@@ -47,7 +51,8 @@
       "billing": "Plan & billing",
       "notifications": "Notifications",
       "settings": "Settings",
-      "security": "Security"
+      "security": "Security",
+      "developer": "Developer"
     },
     "overview": {
       "weeklyUsage": "This week's usage",
@@ -61,6 +66,21 @@
       "plan": "Current plan",
       "upgrade": "Upgrade to Pro",
       "manage": "Manage subscription"
+    },
+    "chart": {
+      "title": "Conversion activity",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "lastWeeks": "Last 4 weeks",
+      "lastMonths": "Last 4 months",
+      "conversions": "Conversions",
+      "empty": "No data yet. Run your first conversion to see your activity."
+    },
+    "formats": {
+      "title": "Top formats",
+      "subtitle": "Your most converted format pairs.",
+      "times": "{count} times",
+      "empty": "No conversions yet."
     },
     "history": {
       "title": "Conversion history",
@@ -93,6 +113,36 @@
       "deleteAccount": "Delete account",
       "deleteConfirm": "This will permanently delete your account and all related data. This cannot be undone.",
       "deleteCta": "I understand, delete my account"
+    },
+    "referral": {
+      "title": "Invite friends",
+      "subtitle": "Share your link. Each friend who signs up earns you +5 extra files this week.",
+      "yourLink": "Your invite link",
+      "yourCode": "Your code",
+      "stats": "{count} friends invited · +{bonus} bonus files this week",
+      "noneYet": "No invites yet — share your link to earn bonus files.",
+      "copyLink": "Copy link",
+      "copyCode": "Copy code"
+    },
+    "developer": {
+      "title": "API access",
+      "proOnly": "API access is available on the Pro plan.",
+      "upgradeCta": "Upgrade to Pro",
+      "intro": "Generate an API key to integrate iFlexi into your own apps. Only one active key is allowed at a time.",
+      "soonNote": "Coming soon: integration with the conversion API endpoint.",
+      "noKey": "No active API key.",
+      "createKey": "Create API key",
+      "newKeyTitle": "Your new API key",
+      "newKeyDesc": "Copy this key now. For your security, we will never show it again.",
+      "activeKey": "Active key",
+      "createdAt": "Created {date}",
+      "lastUsed": "Last used {date}",
+      "neverUsed": "Never used",
+      "revokeKey": "Revoke key",
+      "rotate": "Rotate key",
+      "confirmRevoke": "Revoke this key? Apps using it will stop working immediately.",
+      "keyCreated": "API key created.",
+      "keyRevoked": "API key revoked."
     },
     "security": {
       "sessions": "Active sessions",

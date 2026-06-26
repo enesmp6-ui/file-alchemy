@@ -17,6 +17,8 @@ export type User = {
   email: string;
   plan: "free" | "pro";
   trialEndsAt?: number | null;
+  referralCode: string | null;
+  referredBy: string | null;
 };
 
 type AuthContextValue = {
@@ -27,6 +29,7 @@ type AuthContextValue = {
     email: string,
     password: string,
     name?: string,
+    referralCode?: string,
   ) => Promise<{ error?: string }>;
   signInWithGoogle: () => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
@@ -35,6 +38,7 @@ type AuthContextValue = {
 };
 
 const TIER_KEY = "wlimit:tier";
+const REFERRAL_STORAGE_KEY = "iflexi:referral_code";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -50,12 +54,14 @@ type ProfileRow = {
   display_name: string | null;
   plan: "free" | "pro";
   trial_ends_at: string | null;
+  referral_code: string | null;
+  referred_by: string | null;
 };
 
 async function loadProfile(session: Session): Promise<User | null> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, email, display_name, plan, trial_ends_at")
+    .select("id, email, display_name, plan, trial_ends_at, referral_code, referred_by")
     .eq("id", session.user.id)
     .maybeSingle<ProfileRow>();
 
@@ -78,6 +84,8 @@ async function loadProfile(session: Session): Promise<User | null> {
       name: fallbackName,
       plan: "free",
       trialEndsAt: null,
+      referralCode: null,
+      referredBy: null,
     };
   }
 
@@ -87,6 +95,8 @@ async function loadProfile(session: Session): Promise<User | null> {
     name: data.display_name || fallbackName,
     plan: data.plan,
     trialEndsAt: data.trial_ends_at ? new Date(data.trial_ends_at).getTime() : null,
+    referralCode: data.referral_code,
+    referredBy: data.referred_by,
   };
 }
 
@@ -109,7 +119,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let mounted = true;
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      // Defer async work to avoid deadlocks in the listener.
       setTimeout(() => {
         if (mounted) void applySession(session);
       }, 0);
@@ -126,6 +135,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [applySession]);
 
+  // Capture referral code from URL on first load.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref && /^[a-z0-9]{4,16}$/i.test(ref)) {
+      window.localStorage.setItem(REFERRAL_STORAGE_KEY, ref);
+    }
+  }, []);
+
   const signInWithPassword: AuthContextValue["signInWithPassword"] = useCallback(
     async (email, password) => {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -136,18 +155,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signUpWithPassword: AuthContextValue["signUpWithPassword"] = useCallback(
-    async (email, password, name) => {
+    async (email, password, name, referralCode) => {
       const redirect =
         typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+      const ref =
+        referralCode ??
+        (typeof window !== "undefined"
+          ? window.localStorage.getItem(REFERRAL_STORAGE_KEY) ?? undefined
+          : undefined);
+      const data: Record<string, string> = {};
+      if (name) data.display_name = name;
+      if (ref) data.referral_code = ref;
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: redirect,
-          data: name ? { display_name: name } : undefined,
+          data: Object.keys(data).length ? data : undefined,
         },
       });
       if (error) return { error: error.message };
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(REFERRAL_STORAGE_KEY);
+      }
       return {};
     },
     [],

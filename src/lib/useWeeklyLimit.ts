@@ -25,6 +25,8 @@ type LimitResponse = {
   plan: Tier;
   used: number;
   limit: number;
+  baseLimit?: number;
+  bonusLimit?: number;
   remaining: number;
   maxBytes: number;
   reason?: "file_too_large" | "weekly_limit_reached";
@@ -64,6 +66,8 @@ export function useWeeklyLimit() {
   const [tier, setTier] = useState<Tier>("guest");
   const [used, setUsed] = useState(0);
   const [limit, setLimit] = useState(TIERS.guest.weekly);
+  const [baseLimit, setBaseLimit] = useState(TIERS.guest.weekly);
+  const [bonusLimit, setBonusLimit] = useState(0);
   const [maxBytes, setMaxBytes] = useState(TIERS.guest.maxMB * 1024 * 1024);
   const [periodStart, setPeriodStart] = useState<number | null>(null);
   const [now, setNow] = useState(() => Date.now());
@@ -74,6 +78,8 @@ export function useWeeklyLimit() {
     if (!res) return;
     setUsed(res.used);
     setLimit(res.limit);
+    setBaseLimit(res.baseLimit ?? res.limit);
+    setBonusLimit(res.bonusLimit ?? 0);
     setMaxBytes(res.maxBytes);
     if (res.plan) {
       setTier(res.plan);
@@ -93,13 +99,11 @@ export function useWeeklyLimit() {
     setLoading(false);
   }, [applyResponse]);
 
-  // Tick clock for countdown
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
 
-  // Initial load + react to auth changes
   useEffect(() => {
     void refresh();
     const { data: sub } = supabase.auth.onAuthStateChange((_e, _s) => {
@@ -115,7 +119,6 @@ export function useWeeklyLimit() {
     [remaining],
   );
 
-  /** Reserves a single file slot on the server before conversion. */
   const consumeOne = useCallback(
     async (meta: ConsumeMeta): Promise<LimitResponse> => {
       const { data: sessionData } = await supabase.auth.getSession();
@@ -139,7 +142,6 @@ export function useWeeklyLimit() {
     [applyResponse, used, limit, maxBytes],
   );
 
-  // Countdown to next period_start + 7 days
   const resetIn = periodStart
     ? Math.max(0, periodStart + WEEK_MS - now)
     : null;
@@ -163,6 +165,8 @@ export function useWeeklyLimit() {
     used,
     remaining,
     limit,
+    baseLimit,
+    bonusLimit,
     maxBytes,
     countdown,
     loading,

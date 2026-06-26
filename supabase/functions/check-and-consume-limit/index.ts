@@ -93,7 +93,7 @@ Deno.serve(async (req: Request) => {
   // Ensure usage row exists
   const { data: existing, error: selErr } = await admin
     .from("usage_counters")
-    .select("id, files_used")
+    .select("id, files_used, bonus_limit")
     .eq("user_id", userId)
     .eq("period_start", periodStart)
     .maybeSingle();
@@ -101,25 +101,31 @@ Deno.serve(async (req: Request) => {
 
   let usageId = existing?.id as string | undefined;
   let filesUsed = existing?.files_used ?? 0;
+  let bonusLimit = existing?.bonus_limit ?? 0;
 
   if (!usageId) {
     const { data: ins, error: insErr } = await admin
       .from("usage_counters")
-      .insert({ user_id: userId, period_start: periodStart, files_used: 0 })
-      .select("id, files_used")
+      .insert({ user_id: userId, period_start: periodStart, files_used: 0, bonus_limit: 0 })
+      .select("id, files_used, bonus_limit")
       .single();
     if (insErr) return json({ error: "usage_insert_failed" }, 500);
     usageId = ins.id;
     filesUsed = ins.files_used;
+    bonusLimit = ins.bonus_limit ?? 0;
   }
+
+  const effectiveLimit = limits.weekly + bonusLimit;
 
   if (probe) {
     return json({
-      allowed: filesUsed < limits.weekly,
+      allowed: filesUsed < effectiveLimit,
       plan,
       used: filesUsed,
-      limit: limits.weekly,
-      remaining: Math.max(0, limits.weekly - filesUsed),
+      limit: effectiveLimit,
+      baseLimit: limits.weekly,
+      bonusLimit,
+      remaining: Math.max(0, effectiveLimit - filesUsed),
       maxBytes: limits.maxBytes,
       periodStart,
     });
@@ -134,8 +140,10 @@ Deno.serve(async (req: Request) => {
         reason: "file_too_large",
         plan,
         used: filesUsed,
-        limit: limits.weekly,
-        remaining: Math.max(0, limits.weekly - filesUsed),
+        limit: effectiveLimit,
+        baseLimit: limits.weekly,
+        bonusLimit,
+        remaining: Math.max(0, effectiveLimit - filesUsed),
         maxBytes: limits.maxBytes,
       },
       413,
@@ -143,14 +151,16 @@ Deno.serve(async (req: Request) => {
   }
 
   // Weekly limit guard
-  if (filesUsed >= limits.weekly) {
+  if (filesUsed >= effectiveLimit) {
     return json(
       {
         allowed: false,
         reason: "weekly_limit_reached",
         plan,
         used: filesUsed,
-        limit: limits.weekly,
+        limit: effectiveLimit,
+        baseLimit: limits.weekly,
+        bonusLimit,
         remaining: 0,
         maxBytes: limits.maxBytes,
       },
@@ -158,7 +168,6 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Atomic-ish increment guarded by current files_used (optimistic check)
   const nextUsed = filesUsed + 1;
   const { error: updErr } = await admin
     .from("usage_counters")
@@ -167,7 +176,6 @@ Deno.serve(async (req: Request) => {
     .eq("files_used", filesUsed);
   if (updErr) return json({ error: "usage_update_failed" }, 500);
 
-  // Audit log — meta only, no file content ever leaves the browser
   await admin.from("conversions_log").insert({
     user_id: userId,
     file_size_bytes: size || null,
@@ -179,8 +187,10 @@ Deno.serve(async (req: Request) => {
     allowed: true,
     plan,
     used: nextUsed,
-    limit: limits.weekly,
-    remaining: Math.max(0, limits.weekly - nextUsed),
+    limit: effectiveLimit,
+    baseLimit: limits.weekly,
+    bonusLimit,
+    remaining: Math.max(0, effectiveLimit - nextUsed),
     maxBytes: limits.maxBytes,
     periodStart,
   });

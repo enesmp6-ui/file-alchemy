@@ -36,7 +36,11 @@
     "soon": "Çok yakında",
     "back": "Geri",
     "next": "İleri",
-    "previous": "Önceki"
+    "previous": "Önceki",
+    "copy": "Kopyala",
+    "copied": "Panoya kopyalandı",
+    "create": "Oluştur",
+    "revoke": "İptal et"
   },
   "account": {
     "title": "Hesabım",
@@ -47,7 +51,8 @@
       "billing": "Plan & Faturalama",
       "notifications": "Bildirimler",
       "settings": "Ayarlar",
-      "security": "Güvenlik"
+      "security": "Güvenlik",
+      "developer": "Geliştirici"
     },
     "overview": {
       "weeklyUsage": "Bu haftaki kullanımın",
@@ -61,6 +66,21 @@
       "plan": "Mevcut plan",
       "upgrade": "Pro'ya Yükselt",
       "manage": "Aboneliği Yönet"
+    },
+    "chart": {
+      "title": "Dönüşüm aktivitesi",
+      "weekly": "Haftalık",
+      "monthly": "Aylık",
+      "lastWeeks": "Son 4 hafta",
+      "lastMonths": "Son 4 ay",
+      "conversions": "Dönüşüm",
+      "empty": "Henüz veri yok. İlk dönüşümünü yap, aktiviten burada görünsün."
+    },
+    "formats": {
+      "title": "En çok kullandığın formatlar",
+      "subtitle": "En çok dönüştürdüğün üç format çifti.",
+      "times": "{count} kez",
+      "empty": "Henüz dönüşüm yapmadın."
     },
     "history": {
       "title": "Dönüşüm geçmişi",
@@ -93,6 +113,36 @@
       "deleteAccount": "Hesabı Sil",
       "deleteConfirm": "Bu işlem hesabını ve tüm verilerini kalıcı olarak siler. Geri alınamaz.",
       "deleteCta": "Anladım, hesabımı sil"
+    },
+    "referral": {
+      "title": "Arkadaşını davet et",
+      "subtitle": "Davet linkini paylaş. Bağlantın üzerinden kayıt olan her arkadaş sana bu hafta için +5 ekstra dosya hakkı kazandırır.",
+      "yourLink": "Davet linkin",
+      "yourCode": "Davet kodun",
+      "stats": "{count} arkadaş davet ettin · bu hafta +{bonus} bonus dosya hakkı",
+      "noneYet": "Henüz davet yok — linkini paylaş, bonus dosya hakkı kazan.",
+      "copyLink": "Linki kopyala",
+      "copyCode": "Kodu kopyala"
+    },
+    "developer": {
+      "title": "API erişimi",
+      "proOnly": "API erişimi yalnızca Pro planında kullanılabilir.",
+      "upgradeCta": "Pro'ya Yükselt",
+      "intro": "iFlexi'yi kendi uygulamalarına entegre etmek için API anahtarı oluştur. Aynı anda yalnızca tek bir aktif anahtarın olabilir.",
+      "soonNote": "Yakında: API ile dönüşüm endpoint entegrasyonu.",
+      "noKey": "Aktif API anahtarın yok.",
+      "createKey": "API anahtarı oluştur",
+      "newKeyTitle": "Yeni API anahtarın",
+      "newKeyDesc": "Bu anahtarı şimdi kopyala. Güvenliğin için bu anahtarı bir daha asla göstermeyeceğiz.",
+      "activeKey": "Aktif anahtar",
+      "createdAt": "{date} tarihinde oluşturuldu",
+      "lastUsed": "Son kullanım: {date}",
+      "neverUsed": "Henüz kullanılmadı",
+      "revokeKey": "Anahtarı iptal et",
+      "rotate": "Anahtarı yenile",
+      "confirmRevoke": "Bu anahtarı iptal etmek istiyor musun? Bu anahtarı kullanan uygulamalar anında çalışmayı durdurur.",
+      "keyCreated": "API anahtarı oluşturuldu.",
+      "keyRevoked": "API anahtarı iptal edildi."
     },
     "security": {
       "sessions": "Aktif oturumlar",
