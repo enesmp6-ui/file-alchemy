@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          revoked: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          revoked?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          revoked?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversions_log: {
         Row: {
           created_at: string
@@ -73,6 +103,8 @@ export type Database = {
           id: string
           plan: string
           plan_started_at: string | null
+          referral_code: string
+          referred_by: string | null
           stripe_customer_id: string | null
           trial_ends_at: string | null
         }
@@ -83,6 +115,8 @@ export type Database = {
           id: string
           plan?: string
           plan_started_at?: string | null
+          referral_code: string
+          referred_by?: string | null
           stripe_customer_id?: string | null
           trial_ends_at?: string | null
         }
@@ -93,25 +127,38 @@ export type Database = {
           id?: string
           plan?: string
           plan_started_at?: string | null
+          referral_code?: string
+          referred_by?: string | null
           stripe_customer_id?: string | null
           trial_ends_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_referred_by_fkey"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       usage_counters: {
         Row: {
+          bonus_limit: number
           files_used: number
           id: string
           period_start: string
           user_id: string
         }
         Insert: {
+          bonus_limit?: number
           files_used?: number
           id?: string
           period_start: string
           user_id: string
         }
         Update: {
+          bonus_limit?: number
           files_used?: number
           id?: string
           period_start?: string
@@ -124,7 +171,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_referral_bonus: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
