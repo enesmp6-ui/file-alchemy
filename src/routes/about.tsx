@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { PageShell, GlassCard } from "@/components/PageShell";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -8,13 +9,7 @@ export const Route = createFileRoute("/about")({
       { title: "Hakkımızda — iFlexi" },
       {
         name: "description",
-        content:
-          "iFlexi, gizliliği merkeze koyan bir tarayıcı içi görüntü stüdyosudur. Hikâyemizi keşfet.",
-      },
-      { property: "og:title", content: "Hakkımızda — iFlexi" },
-      {
-        property: "og:description",
-        content: "Gizliliği merkeze koyan tarayıcı içi görüntü stüdyosu.",
+        content: "iFlexi, gizliliği merkeze koyan bir tarayıcı içi görüntü stüdyosudur. Hikâyemizi keşfet.",
       },
     ],
   }),
@@ -23,51 +18,70 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   return (
-    <PageShell
-      eyebrow="Hakkımızda"
-      title={<>Gizlilik,<br /><span className="text-muted-foreground">varsayılan.</span></>}
-      max="max-w-4xl"
-    >
-      <article className="space-y-10 text-xl leading-relaxed text-muted-foreground">
-        <p>
-          iFlexi, dosyalarınla buluta yolculuk etmeyen, sadece senin
-          cihazında çalışan bir görüntü stüdyosudur. Her dönüşüm Canvas API
-          üzerinde, sıfır gecikmeyle, sıfır sızıntıyla gerçekleşir.
-        </p>
-        <p>
-          Apple'ın yıllardır savunduğu o sade tasarım disiplinine inanıyoruz:
-          az ama özenle. Bir kaydırıcı, bir buton, bir indirme. Aradan çıkmak
-          için tasarlandık.
-        </p>
-        <p>
-          Üç tier — Misafir, Ücretsiz Üye, Pro — adil kullanım için var.
-          Pro denemesi 14 gün, kart bilgisi istemez, otomatik yenilenmez.
-        </p>
-      </article>
-
-      <section className="mt-24 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        {[
-          { k: "0", v: "Sunucuya gönderim" },
-          { k: "100%", v: "Tarayıcıda işlem" },
-          { k: "14 gün", v: "Pro deneme" },
-        ].map((s) => (
-          <GlassCard key={s.v} className="text-center">
-            <p className="text-5xl font-bold tracking-tight text-foreground">{s.k}</p>
-            <p className="mt-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
-              {s.v}
-            </p>
-          </GlassCard>
-        ))}
-      </section>
-
-      <div className="mt-24 text-center">
-        <Link
-          to="/"
-          className="inline-flex rounded-full bg-foreground px-10 py-4 text-sm font-bold text-background transition-all duration-300 hover:opacity-90 hover:scale-105"
+    <div className="min-h-screen bg-background text-foreground hero-gradient">
+      <Navbar />
+      <main className="mx-auto max-w-5xl px-6 pt-32 pb-32 sm:px-8 sm:pt-48">
+        <motion.header
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
         >
-          Dönüştürmeye Başla
-        </Link>
-      </div>
-    </PageShell>
+          <div className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/5 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.25em] text-brand neon-glow">
+            Hakkımızda
+          </div>
+          <h1 className="mt-10 text-5xl font-black tracking-tighter uppercase sm:text-7xl md:text-8xl">
+            Gizlilik,
+            <span className="neon-text block mt-2">varsayılan.</span>
+          </h1>
+        </motion.header>
+
+        <article className="mt-24 space-y-12 text-xl font-medium leading-relaxed text-muted-foreground text-center">
+          <p>
+            iFlexi, dosyalarınla buluta yolculuk etmeyen, sadece senin
+            cihazında çalışan bir görüntü stüdyosudur. Her dönüşüm Canvas API
+            üzerinde, sıfır gecikmeyle, sıfır sızıntıyla gerçekleşir.
+          </p>
+          <p>
+            Modern tasarım disiplinine inanıyoruz: az ama özenle. 
+            Karmaşık menüler yok, sadece hız ve kalite var.
+          </p>
+          <p>
+            Adil kullanım için üç farklı seviye sunuyoruz. Misafir olarak deneyebilir, 
+            ücretsiz üye olarak limitlerini artırabilir veya Pro ile sınırlara meydan okuyabilirsin.
+          </p>
+        </article>
+
+        <section className="mt-32 grid grid-cols-1 gap-8 sm:grid-cols-3">
+          {[
+            { k: "0", v: "Sunucuya gönderim" },
+            { k: "100%", v: "Tarayıcıda işlem" },
+            { k: "∞", v: "Gizlilik Garantisi" },
+          ].map((s, i) => (
+            <motion.div 
+              key={s.v} 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="nocteria-card p-10 text-center"
+            >
+              <p className="text-5xl font-black tracking-tighter text-foreground">{s.k}</p>
+              <p className="mt-4 text-[10px] font-black uppercase tracking-[0.3em] text-brand">
+                {s.v}
+              </p>
+            </motion.div>
+          ))}
+        </section>
+
+        <div className="mt-32 text-center">
+          <Link
+            to="/"
+            className="inline-flex rounded-xl bg-brand px-12 py-5 text-sm font-black uppercase tracking-widest text-background transition-all hover:scale-105 active:scale-95 neon-glow"
+          >
+            Dönüştürmeye Başla
+          </Link>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }

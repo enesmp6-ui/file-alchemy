@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
+import { useI18n } from "@/lib/I18nContext";
 
 type Mode = "signin" | "signup";
 
@@ -17,6 +18,7 @@ export function AuthModal({
   onSwitch: (m: Mode) => void;
 }) {
   const { signInWithPassword, signUpWithPassword, signInWithGoogle } = useAuth();
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -42,13 +44,9 @@ export function AuthModal({
       return;
     }
     if (mode === "signup") {
-      toast.success("Kaydın alındı.", {
-        description:
-          "E-postana gönderdiğimiz doğrulama bağlantısını açtıktan sonra giriş yapabilirsin.",
-        duration: 8000,
-      });
+      toast.success(t("auth.signupSuccess"));
     } else {
-      toast.success("Hoş geldin.");
+      toast.success(t("auth.signinSuccess"));
     }
     reset();
     onClose();
@@ -72,65 +70,65 @@ export function AuthModal({
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+            className="absolute inset-0 bg-background/90 backdrop-blur-2xl"
             onClick={onClose}
           />
           <motion.div
-            initial={{ scale: 0.92, opacity: 0, y: 20 }}
+            initial={{ scale: 0.95, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 10 }}
-            transition={{ type: "spring", stiffness: 280, damping: 26 }}
-            className="relative z-10 w-full max-w-sm glass-card p-8"
+            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="relative z-10 w-full max-w-md nocteria-card p-10 neon-glow"
           >
-            <h2 className="text-center text-2xl font-semibold tracking-tight">
-              {mode === "signin" ? "Hesabına Giriş Yap" : "Hesap Oluştur"}
-            </h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
-              {mode === "signin"
-                ? "Devam etmek için bilgilerini gir."
-                : "Saniyeler içinde haftalık 20 limitine ulaş."}
-            </p>
+            <div className="text-center">
+              <h2 className="text-3xl font-black tracking-tighter uppercase">
+                {mode === "signin" ? t("auth.signinTitle") : t("auth.signupTitle")}
+              </h2>
+              <p className="mt-3 text-sm font-medium text-muted-foreground">
+                {mode === "signin" ? t("auth.signinSubtitle") : t("auth.signupSubtitle")}
+              </p>
+            </div>
 
             <button
               type="button"
               onClick={onGoogle}
               disabled={loading}
-              className="mt-7 flex w-full items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10 disabled:opacity-50"
+              className="mt-10 flex w-full items-center justify-center gap-4 rounded-xl border border-border/40 bg-card/50 px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground transition hover:border-brand/40 hover:bg-card disabled:opacity-50"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden>
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
                 <path
-                  fill="#fff"
+                  fill="currentColor"
                   d="M21.35 11.1H12v2.9h5.35c-.23 1.4-1.62 4.1-5.35 4.1-3.22 0-5.85-2.67-5.85-5.95S8.78 6.2 12 6.2c1.83 0 3.06.78 3.76 1.45l2.57-2.47C16.7 3.66 14.55 2.7 12 2.7 6.86 2.7 2.7 6.86 2.7 12s4.16 9.3 9.3 9.3c5.37 0 8.92-3.77 8.92-9.07 0-.6-.06-1.05-.15-1.13z"
                 />
               </svg>
-              Google ile Devam Et
+              {t("auth.google")}
             </button>
 
-            <div className="my-6 flex items-center gap-3 text-xs text-white/30">
-              <div className="h-px flex-1 bg-white/10" />
-              veya
-              <div className="h-px flex-1 bg-white/10" />
+            <div className="my-8 flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+              <div className="h-px flex-1 bg-border/40" />
+              {t("auth.or")}
+              <div className="h-px flex-1 bg-border/40" />
             </div>
 
-            <form onSubmit={submit} className="space-y-3">
+            <form onSubmit={submit} className="space-y-4">
               {mode === "signup" && (
                 <AuthInput
-                  label="İsim"
+                  label={t("auth.name")}
                   value={name}
                   onChange={setName}
-                  placeholder="Adın"
+                  placeholder={t("auth.namePlaceholder")}
                 />
               )}
               <AuthInput
-                label="E-posta"
+                label={t("auth.email")}
                 type="email"
                 value={email}
                 onChange={setEmail}
-                placeholder="ornek@iflexi.com"
+                placeholder="hello@nocteria.com"
                 required
               />
               <AuthInput
-                label="Şifre"
+                label={t("auth.password")}
                 type="password"
                 value={password}
                 onChange={setPassword}
@@ -140,23 +138,23 @@ export function AuthModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 w-full rounded-full bg-[#0071e3] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#0077ed] disabled:opacity-60"
+                className="mt-4 w-full rounded-xl bg-brand px-6 py-4 text-xs font-black uppercase tracking-widest text-background transition-all hover:scale-[1.02] active:scale-95 neon-glow disabled:opacity-60"
               >
                 {loading
-                  ? "Bir saniye…"
+                  ? t("auth.loading")
                   : mode === "signin"
-                    ? "Giriş Yap"
-                    : "E-posta ile Kayıt Ol"}
+                    ? t("auth.signinCta")
+                    : t("auth.signupCta")}
               </button>
             </form>
 
-            <p className="mt-6 text-center text-xs text-muted-foreground">
-              {mode === "signin" ? "Hesabın yok mu?" : "Zaten hesabın var mı?"}{" "}
+            <p className="mt-8 text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              {mode === "signin" ? t("auth.noAccount") : t("auth.hasAccount")}{" "}
               <button
                 onClick={() => onSwitch(mode === "signin" ? "signup" : "signin")}
-                className="text-white underline-offset-2 hover:underline"
+                className="text-brand hover:neon-text transition-all"
               >
-                {mode === "signin" ? "Kayıt ol" : "Giriş yap"}
+                {mode === "signin" ? t("auth.signupLink") : t("auth.signinLink")}
               </button>
             </p>
           </motion.div>
@@ -183,7 +181,7 @@ function AuthInput({
 }) {
   return (
     <label className="block">
-      <span className="block text-[11px] uppercase tracking-widest text-white/40">
+      <span className="block text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 ml-1">
         {label}
       </span>
       <input
@@ -192,7 +190,7 @@ function AuthInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="peer mt-1.5 w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-white outline-none transition focus:border-[#0071e3] focus:shadow-[0_0_0_3px_rgba(0,113,227,0.25)]"
+        className="mt-2 w-full rounded-xl border border-border/40 bg-card/30 px-5 py-3.5 text-sm text-foreground outline-none transition-all focus:border-brand/40 focus:bg-card/50 placeholder:text-muted-foreground/30"
       />
     </label>
   );

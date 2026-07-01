@@ -1,6 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { Sun, Moon } from "lucide-react";
-import { useTheme } from "@/lib/ThemeContext";
 import { useI18n, type Locale } from "@/lib/I18nContext";
 
 type Known =
@@ -18,7 +16,6 @@ type Known =
   | "/cookies";
 
 export function Footer() {
-  const { theme, toggle } = useTheme();
   const { locale, setLocale, t } = useI18n();
   const other: Locale = locale === "en" ? "tr" : "en";
 
@@ -29,87 +26,86 @@ export function Footer() {
         { label: t("nav.converter"), to: "/" },
         { label: t("nav.pricing"), to: "/pricing" },
         { label: t("nav.usage"), to: "/limits" },
-        { label: t("nav.security"), to: "/security" },
       ],
     },
     {
       title: t("footer.company"),
       links: [
         { label: t("nav.about"), to: "/about" },
-        { label: "Contact", to: "/contact" },
+        { label: "İletişim", to: "/contact" },
       ],
     },
     {
       title: t("footer.resources"),
       links: [
         { label: t("nav.help"), to: "/help" },
-        { label: "FAQ", to: "/faq" },
-        { label: "Status", to: "/status" },
+        { label: "Sistem Durumu", to: "/status" },
       ],
     },
     {
       title: t("footer.legal"),
       links: [
-        { label: "Privacy", to: "/privacy" },
-        { label: "Terms", to: "/terms" },
-        { label: "Cookies", to: "/cookies" },
+        { label: "Gizlilik", to: "/privacy" },
+        { label: "Şartlar", to: "/terms" },
       ],
     },
   ];
 
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-        <div className="flex items-center gap-2">
-          <div className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
-            <span className="text-[13px] font-bold tracking-tight">i</span>
-          </div>
-          <span className="text-sm font-semibold tracking-tight">
-            iFlexi<span className="text-muted-foreground">.com</span>
-          </span>
-        </div>
-        <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
-          {t("footer.tagline")}
-        </p>
-
-        <div className="mt-10 grid grid-cols-2 gap-8 border-t border-border pt-10 sm:grid-cols-4">
-          {COLUMNS.map((col) => (
-            <div key={col.title}>
-              <h4 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                {col.title}
-              </h4>
-              <ul className="mt-4 space-y-3">
-                {col.links.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      to={l.to}
-                      className="text-sm text-foreground/80 transition hover:text-foreground"
-                    >
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+    <footer className="border-t border-border/40 bg-background/50 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-10 py-20">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-foreground text-background transition-transform group-hover:scale-105">
+                <span className="text-xl font-black tracking-tighter">i</span>
+              </div>
+              <span className="text-xl font-black tracking-tighter">
+                iFlexi<span className="text-brand">.com</span>
+              </span>
+            </Link>
+            <p className="mt-6 max-w-xs text-sm font-medium leading-relaxed text-muted-foreground">
+              {t("footer.tagline")}
+            </p>
+            <div className="mt-8 flex items-center gap-4">
+              <button
+                onClick={() => setLocale(other)}
+                className="rounded-lg bg-card/50 border border-border/40 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-foreground transition hover:border-brand/40"
+              >
+                {locale.toUpperCase()} / {other.toUpperCase()}
+              </button>
             </div>
-          ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8">
+            {COLUMNS.map((col) => (
+              <div key={col.title}>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
+                  {col.title}
+                </h4>
+                <ul className="mt-6 space-y-4">
+                  {col.links.map((l) => (
+                    <li key={l.label}>
+                      <Link
+                        to={l.to}
+                        className="text-sm font-medium text-foreground/60 transition hover:text-brand hover:translate-x-1 inline-block"
+                      >
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 border-t border-border pt-6 text-[11px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-20 flex flex-col gap-6 border-t border-border/40 pt-10 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} iFlexi.com. {t("footer.rights")}</p>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setLocale(other)}
-              className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-foreground transition hover:bg-muted"
-            >
-              {locale.toUpperCase()} · {other.toUpperCase()}
-            </button>
-            <button
-              onClick={toggle}
-              className="grid h-7 w-7 place-items-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground"
-              aria-label={t("nav.theme")}
-            >
-              {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
-            </button>
+          <div className="flex items-center gap-6">
+            <span className="hover:text-foreground cursor-pointer transition-colors">Discord</span>
+            <span className="hover:text-foreground cursor-pointer transition-colors">Twitter</span>
+            <span className="hover:text-foreground cursor-pointer transition-colors">Instagram</span>
           </div>
         </div>
       </div>

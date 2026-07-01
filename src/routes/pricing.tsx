@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { PageShell, GlassCard } from "@/components/PageShell";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { PLANS } from "@/lib/plans";
-import { TIERS } from "@/lib/useWeeklyLimit";
 import { useAuth } from "@/lib/AuthContext";
 import { useI18n } from "@/lib/I18nContext";
+import { Check } from "lucide-react";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -13,13 +14,7 @@ export const Route = createFileRoute("/pricing")({
       { title: "Fiyatlandırma — iFlexi" },
       {
         name: "description",
-        content:
-          "Üç sade plan, gizli ücret yok. Misafir, ücretsiz üye veya Pro — kendi temponda büyü.",
-      },
-      { property: "og:title", content: "Fiyatlandırma — iFlexi" },
-      {
-        property: "og:description",
-        content: "Üç sade plan, gizli ücret yok. Kendi temponda büyü.",
+        content: "Üç sade plan, gizli ücret yok. Misafir, ücretsiz üye veya Pro — kendi temponda büyü.",
       },
     ],
   }),
@@ -46,90 +41,95 @@ function PricingPage() {
   };
 
   return (
-    <PageShell
-      eyebrow={t("nav.pricing")}
-      title={<>{t("pricing.title")}<br /><span className="text-muted-foreground">{t("pricing.subtitle")}</span></>}
-      subtitle={t("pricing.description")}
-    >
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {PLANS.map((p, i) => (
-          <motion.div
-            key={p.tier}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 * i, ease: [0.16, 1, 0.3, 1] }}
-            className="relative"
-          >
-            <GlassCard className={`h-full flex flex-col ${p.featured ? "pro-glow border-foreground/10" : ""}`}>
-              {p.featured && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-background">
-                  {t("pricing.recommended")}
-                </span>
-              )}
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
-                {t(`common.${p.tier}`)}
-              </p>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-4xl font-medium tracking-tight text-foreground">{p.price}</span>
-                <span className="text-xs text-muted-foreground">
-                  {t(`pricing.plans.${p.tier}.priceSub`)}
-                </span>
+    <div className="min-h-screen bg-background text-foreground hero-gradient">
+      <Navbar />
+      <main className="mx-auto max-w-6xl px-6 pt-32 pb-32 sm:px-8 sm:pt-48">
+        <motion.header
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/5 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.25em] text-brand neon-glow">
+            {t("nav.pricing")}
+          </div>
+          <h1 className="mt-10 text-5xl font-black tracking-tighter uppercase sm:text-7xl md:text-8xl">
+            {t("pricing.title")}
+            <span className="neon-text block mt-2">{t("pricing.subtitle")}</span>
+          </h1>
+          <p className="mx-auto mt-8 max-w-2xl text-lg font-medium text-muted-foreground">
+            {t("pricing.description")}
+          </p>
+        </motion.header>
+
+        <div className="mt-24 grid grid-cols-1 gap-8 md:grid-cols-3">
+          {PLANS.map((p, i) => (
+            <motion.div
+              key={p.tier}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * i }}
+              className="relative"
+            >
+              <div className={`nocteria-card h-full p-10 flex flex-col ${p.featured ? "border-brand/40 neon-glow bg-brand/5" : ""}`}>
+                {p.featured && (
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-brand px-6 py-1.5 text-[10px] font-black uppercase tracking-widest text-background">
+                    {t("pricing.recommended")}
+                  </span>
+                )}
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-brand">
+                  {t(`common.${p.tier}`)}
+                </p>
+                <div className="mt-6 flex items-baseline gap-2">
+                  <span className="text-5xl font-black tracking-tighter text-foreground">{p.price}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t(`pricing.plans.${p.tier}.priceSub`)}
+                  </span>
+                </div>
+                <p className="mt-4 text-sm font-medium text-muted-foreground">{t(`pricing.plans.${p.tier}.tagline`)}</p>
+
+                <ul className="mt-12 flex-1 space-y-5">
+                  {(t(`pricing.plans.${p.tier}.perks`, { returnObjects: true }) as string[]).map((perk) => (
+                    <li key={perk} className="flex items-start gap-4 text-sm font-medium text-foreground/80">
+                      <div className="mt-0.5 rounded-full bg-brand/10 p-1 text-brand">
+                        <Check size={12} />
+                      </div>
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => onChoose(p.tier)}
+                  className={`mt-12 w-full rounded-xl py-4 text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 ${
+                    p.featured
+                      ? "bg-brand text-background neon-glow"
+                      : "bg-card border border-border/40 text-foreground hover:border-brand/40"
+                  }`}
+                >
+                  {t(`pricing.plans.${p.tier}.cta`)}
+                </button>
               </div>
-              <p className="mt-3 text-sm text-muted-foreground">{t(`pricing.plans.${p.tier}.tagline`)}</p>
-
-              <ul className="mt-10 flex-1 space-y-4 text-sm">
-                {(t(`pricing.plans.${p.tier}.perks`, { returnObjects: true }) as string[]).map((perk) => (
-                  <li key={perk} className="flex items-start gap-3 text-foreground/80">
-                    <Check />
-                    <span>{perk}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => onChoose(p.tier)}
-                className={`mt-10 w-full rounded-full py-3.5 text-sm font-medium transition-all duration-300 ${
-                  p.featured
-                    ? "bg-foreground text-background hover:opacity-90"
-                    : "bg-muted text-foreground hover:bg-muted/80"
-                }`}
-              >
-                {t(`pricing.plans.${p.tier}.cta`)}
-              </button>
-            </GlassCard>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* FAQ */}
-      <section className="mt-32">
-        <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
-          {t("pricing.faqTitle")}
-        </h2>
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {(t("pricing.faq", { returnObjects: true }) as { q: string; a: string }[]).map((f) => (
-            <GlassCard key={f.q} title={f.q}>
-              <p className="mt-2 text-base text-muted-foreground">{f.a}</p>
-            </GlassCard>
+            </motion.div>
           ))}
         </div>
-      </section>
-    </PageShell>
-  );
-}
 
-function Check() {
-  return (
-    <svg
-      className="mt-0.5 h-4 w-4 shrink-0 text-foreground/40"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
+        <section className="mt-48">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black tracking-tighter uppercase sm:text-5xl">
+              {t("pricing.faqTitle")}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+            {(t("pricing.faq", { returnObjects: true }) as { q: string; a: string }[]).map((f) => (
+              <div key={f.q} className="nocteria-card p-10">
+                <h4 className="text-xl font-bold tracking-tight text-foreground">{f.q}</h4>
+                <p className="mt-4 text-base font-medium leading-relaxed text-muted-foreground">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

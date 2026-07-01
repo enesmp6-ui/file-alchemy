@@ -17,6 +17,7 @@ import {
   pdfToPngBlobs,
   tiffToPngBlob,
 } from "@/lib/formats";
+import { Upload, Download, Settings, Trash2, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 type ItemStatus = "queued" | "running" | "done" | "error" | "blocked";
 
@@ -150,7 +151,6 @@ export function Converter({
 
   const processBatch = useCallback(
     async (files: File[]) => {
-      // Pre-flight: filter to accepted formats
       const accepted = files.filter((f) => {
         if (ACCEPTED_MIME_LIST.includes(f.type)) return true;
         const k = detectKind(f);
@@ -168,7 +168,6 @@ export function Converter({
         return;
       }
 
-      // Create item rows immediately so UI shows queue
       const rows: Item[] = accepted.map((f, i) => ({
         id: `${Date.now()}-${i}-${Math.random().toString(36).slice(2, 8)}`,
         name: f.name,
@@ -188,7 +187,6 @@ export function Converter({
         const row = rows[i];
         const kind = row.sourceKind as ReturnType<typeof detectKind>;
 
-        // Reserve one slot per source file (PDFs count as one file even if many pages).
         const reservation = await consumeOne({
           fileSizeBytes: file.size,
           sourceFormat: kind,
@@ -213,7 +211,6 @@ export function Converter({
         setItem(row.id, { status: "running", progress: 5 });
 
         try {
-          // Decode exotic sources to a raster Blob first.
           const sources: { name: string; blob: Blob }[] = [];
           if (kind === "pdf") {
             const pages = await pdfToPngBlobs(file, file.name.replace(/\.[^.]+$/, ""));
@@ -250,7 +247,6 @@ export function Converter({
 
           if (target === "pdf") {
             if (mergePdf) {
-              // Collect for a single merged PDF at the end
               producedForPdf.push(...converted);
               setItem(row.id, { status: "done", progress: 100, newSize: converted.reduce((a, c) => a + c.blob.size, 0) });
             } else {
@@ -277,7 +273,6 @@ export function Converter({
               outName: c.name,
             });
           } else {
-            // Multi-page source (PDF) exported as raster — zip them under one entry
             const zip = new JSZip();
             converted.forEach((c) => zip.file(c.name, c.blob));
             const bundle = await zip.generateAsync({ type: "blob" });
@@ -297,7 +292,6 @@ export function Converter({
         }
       }
 
-      // Finalize merged PDF (one file for the whole batch)
       if (target === "pdf" && mergePdf && producedForPdf.length) {
         try {
           const merged = await blobsToPdf(producedForPdf);
@@ -351,27 +345,26 @@ export function Converter({
     return Math.round(sum / items.length);
   }, [items]);
 
-  const doneCount = items.filter((i) => i.status === "done").length;
   const busy = items.some((i) => i.status === "running" || i.status === "queued");
 
   return (
-    <div className="glass-card p-5 sm:p-10">
-      <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h3 className="text-2xl font-medium tracking-tight sm:text-3xl">{t("converter.title")}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-xl">
+          <h3 className="text-3xl font-black tracking-tighter uppercase sm:text-4xl">{t("converter.title")}</h3>
+          <p className="mt-4 text-base font-medium text-muted-foreground leading-relaxed">
             {t("converter.description")}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {(["png", "jpeg", "webp", "pdf"] as TargetFormat[]).map((f) => (
             <button
               key={f}
               onClick={() => setTarget(f)}
-              className={`flex-1 rounded-full px-4 py-3 text-xs font-medium uppercase tracking-wider transition-all active:scale-95 sm:flex-none ${
+              className={`flex-1 rounded-xl px-6 py-4 text-xs font-black uppercase tracking-[0.2em] transition-all active:scale-95 sm:flex-none ${
                 target === f
-                  ? "bg-foreground text-background"
-                  : "border border-border text-muted-foreground hover:bg-muted"
+                  ? "bg-brand text-background neon-glow"
+                  : "bg-card/50 border border-border/40 text-muted-foreground hover:border-brand/40 hover:text-foreground"
               }`}
             >
               {f}
@@ -380,292 +373,174 @@ export function Converter({
         </div>
       </div>
 
-      {target !== "png" && target !== "pdf" && (
-        <div className="mt-6">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{t("converter.quality")}</span>
-            <span className="tabular-nums text-foreground/80">%{quality}</span>
-          </div>
-          <input
-            type="range"
-            min={1}
-            max={100}
-            value={quality}
-            onChange={(e) => setQuality(Number(e.target.value))}
-            className="mt-2 w-full accent-foreground"
-          />
-        </div>
-      )}
-
-      {/* Advanced panel */}
-      <div className="mt-6">
-        <button
-          onClick={() => setAdvanced((v) => !v)}
-          className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition hover:text-foreground"
-        >
-          <span>{advanced ? `− ${t("converter.advanced")}` : `+ ${t("converter.advanced")}`}</span>
-        </button>
-        <AnimatePresence initial={false}>
-          {advanced && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden"
-            >
-              <div className="mt-5 grid gap-6 md:grid-cols-3">
-                {/* Resize */}
-                <div className="rounded-2xl border border-border bg-card/50 p-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    {t("converter.resize")}
-                  </p>
-                  <div className="mt-3 flex gap-2">
-                    <input
-                      type="number"
-                      min={1}
-                      placeholder={t("converter.width")}
-                      value={maxW}
-                      onChange={(e) => setMaxW(e.target.value ? Number(e.target.value) : "")}
-                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground/40"
-                    />
-                    <input
-                      type="number"
-                      min={1}
-                      placeholder={t("converter.height")}
-                      value={maxH}
-                      onChange={(e) => setMaxH(e.target.value ? Number(e.target.value) : "")}
-                      className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground/40"
-                    />
-                  </div>
-                  <label className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                    <input
-                      type="checkbox"
-                      checked={keepAspect}
-                      onChange={(e) => setKeepAspect(e.target.checked)}
-                      className="accent-foreground"
-                    />
-                    {t("converter.keepAspect")}
-                  </label>
-                </div>
-
-                {/* Crop */}
-                <div className="rounded-2xl border border-border bg-card/50 p-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    {t("converter.crop")}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {(["original", "1:1", "4:3", "16:9"] as CropAspect[]).map((a) => (
-                      <button
-                        key={a}
-                        onClick={() => setCrop(a)}
-                        className={`rounded-full px-3 py-1.5 text-xs transition ${
-                          crop === a
-                            ? "bg-foreground text-background"
-                            : "border border-border text-muted-foreground hover:bg-muted"
-                        }`}
-                      >
-                        {a === "original" ? t("converter.original") : a}
-                      </button>
-                    ))}
-                  </div>
-                  {target === "pdf" && (
-                    <label className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-                      <input
-                        type="checkbox"
-                        checked={mergePdf}
-                        onChange={(e) => setMergePdf(e.target.checked)}
-                        className="accent-foreground"
-                      />
-                      {t("converter.mergePdf")}
-                    </label>
-                  )}
-                </div>
-
-                {/* Watermark */}
-                <div className="rounded-2xl border border-border bg-card/50 p-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    {t("converter.watermark")}
-                  </p>
-                  <input
-                    type="text"
-                    placeholder={t("converter.text")}
-                    value={wmText}
-                    onChange={(e) => setWmText(e.target.value)}
-                    className="mt-3 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground/40"
-                  />
-                  <div className="mt-3 grid grid-cols-3 gap-1">
-                    {POSITIONS.map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setWmPos(p)}
-                        aria-label={p}
-                        className={`h-6 rounded transition ${
-                          wmPos === p ? "bg-foreground" : "bg-muted hover:bg-muted-foreground/30"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                    <select
-                      value={wmSize}
-                      onChange={(e) => setWmSize(e.target.value as WMSize)}
-                      className="rounded-lg border border-border bg-background px-2 py-1.5 outline-none"
-                    >
-                      <option value="s">{t("common.small")}</option>
-                      <option value="m">{t("common.medium")}</option>
-                      <option value="l">{t("common.large")}</option>
-                    </select>
-                    <select
-                      value={wmColor}
-                      onChange={(e) => setWmColor(e.target.value as WMColor)}
-                      className="rounded-lg border border-border bg-background px-2 py-1.5 outline-none"
-                    >
-                      <option value="white">{t("account.settings.themeLight")}</option>
-                      <option value="black">{t("account.settings.themeDark")}</option>
-                    </select>
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span>{t("converter.opacity")}</span>
-                      <span className="tabular-nums">%{Math.round(wmOpacity * 100)}</span>
-                    </div>
-                    <input
-                      type="range"
-                      min={5}
-                      max={100}
-                      value={Math.round(wmOpacity * 100)}
-                      onChange={(e) => setWmOpacity(Number(e.target.value) / 100)}
-                      className="mt-1 w-full accent-foreground"
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDragOver(false);
-          void processBatch(Array.from(e.dataTransfer.files));
-        }}
-        onClick={() => inputRef.current?.click()}
-        className={`mt-8 flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-16 text-center transition ${
-          dragOver ? "border-foreground/60 bg-muted/40" : "border-border hover:border-foreground/30"
-        }`}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          accept={ACCEPTED_ACCEPT_ATTR}
-          multiple
-          hidden
-          onChange={(e) => {
-            if (e.target.files) {
-              void processBatch(Array.from(e.target.files));
-              e.target.value = ""; // Reset to allow re-selecting same file
-            }
-          }}
-        />
-        <p className="text-lg font-medium">{t("converter.dropzone")}</p>
-        <p className="mt-2 text-sm text-muted-foreground">{t("converter.dropzoneSub")}</p>
-      </div>
-
-      {busy && (
-        <div className="mt-6">
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{t("converter.progress", { done: doneCount, total: items.length })}</span>
-            <span className="tabular-nums">%{overallProgress}</span>
-          </div>
-          <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full bg-gradient-to-r from-foreground to-foreground/60 transition-[width] duration-300"
-              style={{ width: `${overallProgress}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      <AnimatePresence>
-        {items.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8"
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <div
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setDragOver(false);
+              processBatch(Array.from(e.dataTransfer.files));
+            }}
+            onClick={() => inputRef.current?.click()}
+            className={`group relative flex min-h-[400px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed transition-all duration-500 ${
+              dragOver 
+                ? "border-brand bg-brand/5 neon-glow" 
+                : "border-border/40 bg-card/20 hover:border-brand/40 hover:bg-card/30"
+            }`}
           >
+            <input
+              ref={inputRef}
+              type="file"
+              multiple
+              className="hidden"
+              accept={ACCEPTED_ACCEPT_ATTR}
+              onChange={(e) => processBatch(Array.from(e.target.files || []))}
+            />
+            
+            <div className="flex flex-col items-center gap-6">
+              <div className={`rounded-2xl bg-card/50 p-6 transition-transform duration-500 group-hover:scale-110 ${dragOver ? "scale-110 border-brand/40" : "border-border/40"}`}>
+                <Upload className={`h-10 w-10 ${dragOver ? "text-brand" : "text-muted-foreground/60"}`} />
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-black tracking-tight uppercase">{t("converter.drop")}</p>
+                <p className="mt-2 text-sm font-medium text-muted-foreground">{t("converter.orClick")}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="rounded-3xl border border-border/40 bg-card/20 p-8">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium text-foreground/80">
-                {t("converter.filesSelected", { count: items.length })}
+              <h4 className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
+                <Settings size={14} />
+                {t("converter.advanced")}
               </h4>
-              {doneCount > 1 && (
+              <button 
+                onClick={() => setAdvanced(!advanced)}
+                className="text-[10px] font-black uppercase tracking-widest text-brand hover:neon-text"
+              >
+                {advanced ? "Kapat" : "Düzenle"}
+              </button>
+            </div>
+
+            <div className="mt-8 space-y-6">
+              <div>
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                  <span>{t("converter.quality")}</span>
+                  <span className="text-foreground">%{quality}</span>
+                </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={100}
+                  value={quality}
+                  onChange={(e) => setQuality(Number(e.target.value))}
+                  className="mt-4 w-full accent-brand"
+                />
+              </div>
+
+              {advanced && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6 pt-6 border-t border-border/40"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <label className="block">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Genişlik</span>
+                      <input 
+                        type="number" 
+                        value={maxW} 
+                        onChange={e => setMaxW(e.target.value ? Number(e.target.value) : "")}
+                        placeholder="Auto"
+                        className="mt-2 w-full rounded-xl border border-border/40 bg-background/50 px-4 py-2.5 text-xs font-bold outline-none focus:border-brand/40"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Yükseklik</span>
+                      <input 
+                        type="number" 
+                        value={maxH} 
+                        onChange={e => setMaxH(e.target.value ? Number(e.target.value) : "")}
+                        placeholder="Auto"
+                        className="mt-2 w-full rounded-xl border border-border/40 bg-background/50 px-4 py-2.5 text-xs font-bold outline-none focus:border-brand/40"
+                      />
+                    </label>
+                  </div>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      checked={keepAspect} 
+                      onChange={e => setKeepAspect(e.target.checked)}
+                      className="h-4 w-4 rounded border-border/40 bg-background/50 text-brand focus:ring-brand"
+                    />
+                    <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">Oranları Koru</span>
+                  </label>
+                </motion.div>
+              )}
+            </div>
+          </div>
+
+          {items.length > 0 && (
+            <div className="flex-1 rounded-3xl border border-border/40 bg-card/20 p-8 flex flex-col">
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Liste ({items.length})</h4>
+                <button 
+                  onClick={() => setItems([])}
+                  className="text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto max-h-[300px] space-y-3 pr-2">
+                {items.map((it) => (
+                  <div key={it.id} className="group relative rounded-2xl bg-background/50 p-4 border border-border/20">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-bold text-foreground/90">{it.name}</p>
+                        <p className="mt-1 text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+                          {it.status === "done" ? `${(it.newSize / 1024).toFixed(1)} KB` : it.status}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-3">
+                        {it.status === "running" && <Loader2 className="h-4 w-4 animate-spin text-brand" />}
+                        {it.status === "done" && <CheckCircle2 className="h-4 w-4 text-brand" />}
+                        {it.status === "error" && <AlertCircle className="h-4 w-4 text-destructive" />}
+                        {it.url && (
+                          <a 
+                            href={it.url} 
+                            download={it.outName}
+                            className="rounded-lg bg-brand/10 p-2 text-brand hover:bg-brand hover:text-background transition-all"
+                          >
+                            <Download size={14} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    {it.status === "running" && (
+                      <div className="absolute bottom-0 left-0 h-0.5 bg-brand transition-all duration-300" style={{ width: `${it.progress}%` }} />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {items.some(i => i.status === "done") && (
                 <button
                   onClick={downloadZip}
-                  className="rounded-full bg-foreground px-5 py-2 text-xs font-medium text-background transition hover:opacity-90"
+                  className="mt-6 w-full rounded-xl bg-foreground py-4 text-xs font-black uppercase tracking-widest text-background transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
                 >
-                  {t("converter.downloadZip")}
+                  <Download size={16} />
+                  Tümünü İndir (.ZIP)
                 </button>
               )}
             </div>
-            <ul className="mt-4 divide-y divide-border">
-              {items.map((r) => {
-                const reduction =
-                  r.status === "done" && r.originalSize
-                    ? Math.max(0, Math.round((1 - r.newSize / r.originalSize) * 100))
-                    : 0;
-                return (
-                  <li key={r.id} className="py-3 text-sm">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-foreground">{r.outName}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {r.status === "done" && (
-                            <>
-                              {(r.originalSize / 1024).toFixed(0)}KB →{" "}
-                              {(r.newSize / 1024).toFixed(0)}KB ·{" "}
-                                <span className="text-foreground/80">
-                                {t("converter.saved", { reduction })}
-                              </span>
-                            </>
-                          )}
-                          {r.status === "running" && t("converter.processing")}
-                          {r.status === "queued" && t("converter.queued")}
-                          {r.status === "error" && t("converter.error", { msg: r.error ?? "error" })}
-                          {r.status === "blocked" && t("converter.blocked", { msg: r.error ?? "" })}
-                        </p>
-                        {(r.status === "running" || r.status === "queued") && (
-                          <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
-                            <div
-                              className="h-full bg-foreground transition-[width] duration-200"
-                              style={{ width: `${r.progress}%` }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                      {r.status === "done" && r.url && (
-                        <a
-                          href={r.url}
-                          download={r.outName}
-                          className="shrink-0 rounded-full border border-border px-4 py-1.5 text-xs text-foreground/80 transition hover:bg-muted"
-                        >
-                          {t("converter.download")}
-                        </a>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
