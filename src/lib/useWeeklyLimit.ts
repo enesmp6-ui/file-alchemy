@@ -7,9 +7,9 @@ export const TIERS: Record<
   Tier,
   { label: string; weekly: number; maxMB: number }
 > = {
-  guest: { label: "Misafir", weekly: 5, maxMB: 10 },
-  free: { label: "Ücretsiz Üye", weekly: 20, maxMB: 50 },
-  pro: { label: "Pro Üye", weekly: 200, maxMB: 500 },
+  guest: { label: "Misafir", weekly: 0, maxMB: 0 },
+  free: { label: "Ücretsiz Üye", weekly: 50, maxMB: 100 },
+  pro: { label: "Pro Üye", weekly: 1000, maxMB: 2048 },
 };
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;

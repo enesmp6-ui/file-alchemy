@@ -164,7 +164,7 @@ export function Converter({
         return;
       }
       if (!canConsume(accepted.length)) {
-        onBlocked(t("limits.countdownStart"));
+        onBlocked(t("limits.guestCta"));
         return;
       }
 

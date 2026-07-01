@@ -267,7 +267,7 @@
     "title": "Your week, at a glance.",
     "description": "For fair use, every plan comes with a weekly conversion budget. Your budget automatically resets exactly 7 days after your first conversion.",
     "status": "Status",
-    "guestCta": "Sign in to increase your limit",
+    "guestCta": "Sign in to start converting",
     "proActive": "Pro membership active",
     "freeActive": "Free member",
     "thisWeek": "This week {used} / {total} files",

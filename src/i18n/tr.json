@@ -267,7 +267,7 @@
     "title": "Haftan, tek bakışta.",
     "description": "Adil kullanım için her plan haftalık bir dönüşüm bütçesiyle gelir. Bütçen, ilk dönüşümünden tam 7 gün sonra otomatik yenilenir.",
     "status": "Durum",
-    "guestCta": "Giriş yaparak limitini büyüt",
+    "guestCta": "İşlem yapmak için giriş yapmalısın",
     "proActive": "Pro üyeliğin aktif",
     "freeActive": "Ücretsiz üye",
     "thisWeek": "Bu hafta {used} / {total} dosya",
