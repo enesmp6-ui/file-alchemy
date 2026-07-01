@@ -6,6 +6,7 @@ import { Converter } from "@/components/Converter";
 import { LimitModal } from "@/components/LimitModal";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { GlassCard } from "@/components/PageShell";
 import { useI18n } from "@/lib/I18nContext";
 
 export const Route = createFileRoute("/")({
@@ -30,7 +31,7 @@ function Index() {
   const [modal, setModal] = useState<{ open: boolean; msg?: string }>({ open: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Navbar />
       <main className="mx-auto max-w-6xl px-5 pt-32 pb-32 sm:px-8 sm:pt-40">
         <motion.header
@@ -39,37 +40,37 @@ function Index() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center"
         >
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
             {t("hero.eyebrow")}
           </p>
-          <h1 className="mt-7 text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl md:text-[6.5rem]">
+          <h1 className="mt-8 text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl md:text-[6rem] lg:text-[7rem]">
             {t("hero.titleA")}
             <br />
-            <span className="bg-gradient-to-b from-foreground to-foreground/40 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-b from-foreground to-foreground/50 bg-clip-text text-transparent">
               {t("hero.titleB")}
             </span>
           </h1>
-          <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
             {t("hero.subtitle")}
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
             <a
               href="#converter"
-              className="rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition hover:opacity-90"
+              className="rounded-full bg-foreground px-8 py-4 text-sm font-bold text-background transition-all duration-300 hover:opacity-90 hover:scale-105"
             >
               {t("hero.primary")}
             </a>
             <Link
               to="/pricing"
-              className="rounded-full border border-border px-6 py-3 text-sm font-medium text-foreground transition hover:bg-muted"
+              className="rounded-full border border-border bg-background px-8 py-4 text-sm font-bold text-foreground transition-all duration-300 hover:bg-muted hover:scale-105"
             >
               {t("hero.secondary")}
             </Link>
           </div>
         </motion.header>
 
-        <div id="converter" className="mt-24 scroll-mt-24">
+        <div id="converter" className="mt-32 scroll-mt-24">
           <Converter
             maxBytes={limit.maxBytes}
             canConsume={limit.canConsume}
@@ -78,7 +79,7 @@ function Index() {
           />
         </div>
 
-        <section className="mt-28 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <section className="mt-32 grid grid-cols-1 gap-6 sm:grid-cols-3">
           {[
             {
               title: "Zero cloud upload",
@@ -93,52 +94,55 @@ function Index() {
               body: "Compress dozens of files into one neat package — your folder structure stays yours.",
             },
           ].map((b) => (
-            <div
+            <GlassCard
               key={b.title}
-              className="rounded-2xl border border-border bg-card p-6 shadow-sm"
+              title={b.title}
+              className="hover:scale-[1.02]"
             >
-              <h3 className="text-lg font-semibold tracking-tight">{b.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{b.body}</p>
-            </div>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">{b.body}</p>
+            </GlassCard>
           ))}
         </section>
 
-        <section className="mt-28 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <section className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
           <Link
             to="/limits"
-            className="group relative overflow-hidden rounded-3xl border border-border bg-gradient-to-b from-muted/60 to-transparent p-10 transition hover:bg-muted/30"
+            className="group relative"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              {t("nav.usage")}
-            </p>
-            <h3 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Your week, at a glance.
-            </h3>
-            <p className="mt-3 text-sm text-muted-foreground">Live counter, breathing room.</p>
-            <span className="mt-6 inline-block text-sm font-medium text-foreground/80 transition group-hover:text-foreground">
-              Open panel →
-            </span>
+            <GlassCard className="h-full bg-gradient-to-b from-muted/30 to-transparent hover:scale-[1.02]">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60">
+                {t("nav.usage")}
+              </p>
+              <h3 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+                Your week, at a glance.
+              </h3>
+              <p className="mt-3 text-base font-medium text-muted-foreground">Live counter, breathing room.</p>
+              <span className="mt-8 inline-block text-sm font-bold text-foreground/60 transition group-hover:text-foreground">
+                Open panel →
+              </span>
+            </GlassCard>
           </Link>
           <Link
             to="/pricing"
-            className="group relative overflow-hidden rounded-3xl border border-border bg-gradient-to-b from-muted/60 to-transparent p-10 transition hover:bg-muted/30"
+            className="group relative"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              {t("nav.pricing")}
-            </p>
-            <h3 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Simple pricing. Clear value.
-            </h3>
-            <p className="mt-3 text-sm text-muted-foreground">Guest · Free · Pro.</p>
-            <span className="mt-6 inline-block text-sm font-medium text-foreground/80 transition group-hover:text-foreground">
-              Compare plans →
-            </span>
+            <GlassCard className="h-full bg-gradient-to-b from-muted/30 to-transparent hover:scale-[1.02]">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60">
+                {t("nav.pricing")}
+              </p>
+              <h3 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+                Simple pricing. Clear value.
+              </h3>
+              <p className="mt-3 text-base font-medium text-muted-foreground">Guest · Free · Pro.</p>
+              <span className="mt-8 inline-block text-sm font-bold text-foreground/60 transition group-hover:text-foreground">
+                Compare plans →
+              </span>
+            </GlassCard>
           </Link>
         </section>
       </main>
 
       <Footer />
-
 
       <LimitModal
         open={modal.open}

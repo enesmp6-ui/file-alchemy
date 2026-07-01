@@ -17,27 +17,30 @@ export function PageShell({
   max?: string;
 }) {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Navbar />
       <main className={`mx-auto ${max} px-5 pt-32 pb-32 sm:px-8 sm:pt-40`}>
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center md:text-left"
         >
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/50">
-            {eyebrow}
-          </p>
-          <h1 className="mt-6 text-5xl font-thin leading-[1.05] tracking-tight sm:text-7xl">
+          {eyebrow && (
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground/80">
+              {eyebrow}
+            </p>
+          )}
+          <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:mx-0 sm:text-xl">
               {subtitle}
             </p>
           )}
         </motion.header>
-        <div className="mt-16">{children}</div>
+        <div className="mt-20">{children}</div>
       </main>
       <Footer />
     </div>
@@ -54,11 +57,11 @@ export function GlassCard({
   className?: string;
 }) {
   return (
-    <div className={`glass-card p-6 sm:p-8 ${className}`}>
+    <div className={`glass-card p-6 sm:p-10 transition-all duration-300 hover:shadow-2xl hover:shadow-foreground/5 ${className}`}>
       {title && (
-        <h3 className="text-lg font-semibold tracking-tight sm:text-xl">{title}</h3>
+        <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">{title}</h3>
       )}
-      <div className={title ? "mt-3 text-sm leading-relaxed text-white/70" : ""}>
+      <div className={title ? "mt-4 text-base leading-relaxed text-muted-foreground" : "w-full"}>
         {children}
       </div>
     </div>

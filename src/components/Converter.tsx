@@ -566,7 +566,12 @@ export function Converter({
           accept={ACCEPTED_ACCEPT_ATTR}
           multiple
           hidden
-          onChange={(e) => e.target.files && void processBatch(Array.from(e.target.files))}
+          onChange={(e) => {
+            if (e.target.files) {
+              void processBatch(Array.from(e.target.files));
+              e.target.value = ""; // Reset to allow re-selecting same file
+            }
+          }}
         />
         <p className="text-lg font-medium">Dosyaları sürükleyip bırak</p>
         <p className="mt-2 text-sm text-muted-foreground">PNG · JPG · WEBP · GIF · BMP · TIFF · PDF</p>
@@ -596,14 +601,14 @@ export function Converter({
           >
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-medium text-foreground/80">
-                {items.length} dosya
+                {items.length} Dosya Seçildi
               </h4>
               {doneCount > 1 && (
                 <button
                   onClick={downloadZip}
                   className="rounded-full bg-foreground px-5 py-2 text-xs font-medium text-background transition hover:opacity-90"
                 >
-                  Hepsini ZIP Olarak İndir
+                  Tümünü ZIP Olarak İndir
                 </button>
               )}
             </div>
@@ -624,13 +629,13 @@ export function Converter({
                               {(r.originalSize / 1024).toFixed(0)}KB →{" "}
                               {(r.newSize / 1024).toFixed(0)}KB ·{" "}
                               <span className="text-foreground/80">
-                                Saved {reduction}%
+                                %{reduction} Tasarruf
                               </span>
                             </>
                           )}
-                          {r.status === "running" && "Dönüştürülüyor…"}
+                          {r.status === "running" && "İşleniyor…"}
                           {r.status === "queued" && "Kuyrukta"}
-                          {r.status === "error" && `Hata · ${r.error ?? ""}`}
+                          {r.status === "error" && `Hata: ${r.error ?? "Bilinmeyen bir sorun oluştu"}`}
                           {r.status === "blocked" && `Engellendi · ${r.error ?? ""}`}
                         </p>
                         {(r.status === "running" || r.status === "queued") && (
