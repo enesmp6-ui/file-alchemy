@@ -31,7 +31,7 @@ export function PageShell({
               {eyebrow}
             </p>
           )}
-          <h1 className="mt-6 text-[2.5rem] font-bold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl">
+          <h1 className="mt-6 text-[2.5rem] font-medium leading-[1.1] tracking-tight sm:text-6xl md:text-7xl">
             {title}
           </h1>
           {subtitle && (
@@ -59,7 +59,7 @@ export function GlassCard({
   return (
     <div className={`glass-card p-6 sm:p-10 transition-all duration-300 hover:shadow-2xl hover:shadow-foreground/5 ${className}`}>
       {title && (
-        <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">{title}</h3>
+        <h3 className="text-xl font-medium tracking-tight sm:text-2xl">{title}</h3>
       )}
       <div className={title ? "mt-4 text-base leading-relaxed text-muted-foreground" : "w-full"}>
         {children}

@@ -70,7 +70,7 @@ function PricingPage() {
                 {t(`common.${p.tier}`)}
               </p>
               <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-4xl font-bold tracking-tight text-foreground">{p.price}</span>
+                <span className="text-4xl font-medium tracking-tight text-foreground">{p.price}</span>
                 <span className="text-xs text-muted-foreground">
                   {t(`pricing.plans.${p.tier}.priceSub`)}
                 </span>
@@ -88,7 +88,7 @@ function PricingPage() {
 
               <button
                 onClick={() => onChoose(p.tier)}
-                className={`mt-10 w-full rounded-full py-3.5 text-sm font-semibold transition-all duration-300 ${
+                className={`mt-10 w-full rounded-full py-3.5 text-sm font-medium transition-all duration-300 ${
                   p.featured
                     ? "bg-foreground text-background hover:opacity-90"
                     : "bg-muted text-foreground hover:bg-muted/80"
@@ -103,7 +103,7 @@ function PricingPage() {
 
       {/* FAQ */}
       <section className="mt-32">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
           {t("pricing.faqTitle")}
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">

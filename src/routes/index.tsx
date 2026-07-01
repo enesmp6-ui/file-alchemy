@@ -44,10 +44,10 @@ function Index() {
             <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
             {t("hero.eyebrow")}
           </p>
-          <h1 className="mt-8 text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl md:text-[6rem] lg:text-[7rem]">
-            {t("hero.titleA")}
+          <h1 className="mt-8 text-5xl font-medium leading-[1.05] tracking-tight sm:text-7xl md:text-[6rem] lg:text-[7rem]">
+            <span className="rgb-text">{t("hero.titleA")}</span>
             <br />
-            <span className="bg-gradient-to-b from-foreground to-foreground/50 bg-clip-text text-transparent">
+            <span className="apple-text-gradient">
               {t("hero.titleB")}
             </span>
           </h1>
@@ -57,13 +57,13 @@ function Index() {
           <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
             <a
               href="#converter"
-              className="rounded-full bg-foreground px-8 py-4 text-sm font-bold text-background transition-all duration-300 hover:opacity-90 hover:scale-105"
+              className="rounded-full bg-foreground px-8 py-4 text-sm font-medium text-background transition-all duration-300 hover:opacity-90 hover:scale-105"
             >
               {t("hero.primary")}
             </a>
             <Link
               to="/pricing"
-              className="rounded-full border border-border bg-background px-8 py-4 text-sm font-bold text-foreground transition-all duration-300 hover:bg-muted hover:scale-105"
+              className="rounded-full border border-border bg-background px-8 py-4 text-sm font-medium text-foreground transition-all duration-300 hover:bg-muted hover:scale-105"
             >
               {t("hero.secondary")}
             </Link>

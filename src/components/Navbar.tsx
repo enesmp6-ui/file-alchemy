@@ -43,8 +43,8 @@ export function Navbar() {
             <div className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
               <span className="text-[13px] font-bold tracking-tight">i</span>
             </div>
-            <span className="text-sm font-semibold tracking-tight">
-              iFlexi<span className="text-muted-foreground">.com</span>
+            <span className="text-sm font-medium tracking-tight">
+              <span className="rgb-text">iFlexi</span><span className="text-muted-foreground">.com</span>
             </span>
           </Link>
 
@@ -98,7 +98,7 @@ export function Navbar() {
                 </button>
                 <button
                   onClick={() => setAuthMode("signup")}
-                  className="rounded-full bg-foreground px-4 py-1.5 text-xs font-semibold text-background transition hover:opacity-90"
+                  className="rounded-full bg-foreground px-4 py-1.5 text-xs font-medium text-background transition hover:opacity-90"
                 >
                   {t("nav.signUp")}
                 </button>

@@ -358,7 +358,7 @@ export function Converter({
     <div className="glass-card p-5 sm:p-10">
       <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t("converter.title")}</h3>
+          <h3 className="text-2xl font-medium tracking-tight sm:text-3xl">{t("converter.title")}</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             {t("converter.description")}
           </p>
@@ -368,7 +368,7 @@ export function Converter({
             <button
               key={f}
               onClick={() => setTarget(f)}
-              className={`flex-1 rounded-full px-4 py-3 text-xs font-bold uppercase tracking-wider transition-all active:scale-95 sm:flex-none ${
+              className={`flex-1 rounded-full px-4 py-3 text-xs font-medium uppercase tracking-wider transition-all active:scale-95 sm:flex-none ${
                 target === f
                   ? "bg-foreground text-background"
                   : "border border-border text-muted-foreground hover:bg-muted"
