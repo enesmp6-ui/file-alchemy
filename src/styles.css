@@ -6,109 +6,104 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-brand: var(--brand);
-  --color-brand-foreground: var(--brand-foreground);
-  --color-surface: var(--surface);
-  --color-surface-strong: var(--surface-strong);
-  --color-hairline: var(--hairline);
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  
+  --color-card: #0a0a0a;
+  --color-card-foreground: #ffffff;
+  
+  --color-popover: #000000;
+  --color-popover-foreground: #ffffff;
+  
+  --color-primary: #ffffff;
+  --color-primary-foreground: #000000;
+  
+  --color-secondary: #111111;
+  --color-secondary-foreground: #ffffff;
+  
+  --color-muted: #111111;
+  --color-muted-foreground: #a1a1aa;
+  
+  --color-accent: #111111;
+  --color-accent-foreground: #ffffff;
+  
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-input: rgba(255, 255, 255, 0.05);
+  --color-ring: #ffffff;
+  
+  --color-brand: #00ff88; /* Nocteria Neon Green */
+  
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 1rem;
-  --background: oklch(0.12 0 0);
-  --foreground: oklch(0.98 0 0);
-  --card: oklch(0.15 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.12 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.7 0.2 145); /* Neon Green/Mint */
-  --primary-foreground: oklch(0.12 0 0);
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.25 0 0);
-  --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 10%);
-  --ring: oklch(0.7 0.2 145);
-  --brand: oklch(0.7 0.2 145);
-  --brand-foreground: oklch(0.12 0 0);
-  --surface: oklch(1 0 0 / 3%);
-  --surface-strong: oklch(1 0 0 / 6%);
-  --hairline: oklch(1 0 0 / 8%);
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
-/* Force Dark Mode as base */
 html {
-  color-scheme: dark;
-  background-color: var(--background);
+  background-color: #000000;
+  color: #ffffff;
+  scroll-behavior: smooth;
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-display);
+    background-color: #000000;
+    color: #ffffff;
+    font-family: "Plus Jakarta Sans", sans-serif;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
 }
 
-@utility nocteria-card {
-  background-color: oklch(0.15 0 0 / 60%);
-  border: 1px solid oklch(1 0 0 / 8%);
-  border-radius: 1.25rem;
-  backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+@layer components {
+  .nocteria-btn-primary {
+    @apply rounded-full bg-white px-8 py-4 text-sm font-bold text-black transition-all hover:scale-105 active:scale-95;
+  }
+  
+  .nocteria-btn-secondary {
+    @apply rounded-full border border-white/10 bg-white/5 px-8 py-4 text-sm font-bold text-white transition-all hover:bg-white/10 active:scale-95;
+  }
+
+  .nocteria-card {
+    @apply rounded-[2rem] border border-white/5 bg-[#0a0a0a] p-8 shadow-2xl;
+  }
+
+  .nocteria-glass {
+    @apply backdrop-blur-xl bg-black/40 border border-white/10;
+  }
 }
 
-@utility nocteria-card:hover {
-  border-color: oklch(1 0 0 / 15%);
-  background-color: oklch(0.17 0 0 / 80%);
-  transform: translateY(-2px);
+.hero-spotlight {
+  background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
 }
 
-@utility neon-glow {
-  box-shadow: 0 0 20px -5px oklch(0.7 0.2 145 / 30%);
+.text-nocteria {
+  @apply text-5xl font-extrabold tracking-[-0.04em] sm:text-7xl md:text-8xl lg:text-[7.5rem] leading-[1.1];
 }
 
-@utility neon-text {
-  color: var(--color-primary);
-  text-shadow: 0 0 12px oklch(0.7 0.2 145 / 40%);
+.subtext-nocteria {
+  @apply text-lg font-medium text-zinc-400 sm:text-xl leading-relaxed;
 }
 
-.hero-gradient {
-  background: radial-gradient(circle at 50% -20%, oklch(0.7 0.2 145 / 15%), transparent 70%);
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #222222;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
 }
