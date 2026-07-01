@@ -38,7 +38,7 @@
   --color-input: rgba(255, 255, 255, 0.05);
   --color-ring: #ffffff;
   
-  --color-brand: #00ff88; /* Nocteria Neon Green */
+  --color-brand: #00ff88;
   
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
@@ -60,12 +60,43 @@ html {
     color: #ffffff;
     font-family: "Plus Jakarta Sans", sans-serif;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Noise Overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Grid Pattern */
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
 @layer components {
   .nocteria-btn-primary {
-    @apply rounded-full bg-white px-8 py-4 text-sm font-bold text-black transition-all hover:scale-105 active:scale-95;
+    @apply rounded-full bg-white px-8 py-4 text-sm font-black text-black transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.3)];
   }
   
   .nocteria-btn-secondary {
@@ -73,37 +104,52 @@ html {
   }
 
   .nocteria-card {
-    @apply rounded-[2rem] border border-white/5 bg-[#0a0a0a] p-8 shadow-2xl;
+    @apply rounded-[2.5rem] border border-white/5 bg-[#050505] p-10 shadow-2xl relative overflow-hidden;
   }
 
-  .nocteria-glass {
-    @apply backdrop-blur-xl bg-black/40 border border-white/10;
+  .nocteria-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+
+  .nocteria-input {
+    @apply w-full rounded-full border border-white/5 bg-white/5 px-6 py-4 text-sm font-medium text-white placeholder:text-zinc-600 focus:border-white/20 focus:outline-none focus:ring-0 transition-all;
   }
 }
 
 .hero-spotlight {
-  background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
 }
 
 .text-nocteria {
-  @apply text-5xl font-extrabold tracking-[-0.04em] sm:text-7xl md:text-8xl lg:text-[7.5rem] leading-[1.1];
+  @apply text-5xl font-black tracking-[-0.05em] sm:text-7xl md:text-8xl lg:text-[8rem] leading-[0.9] uppercase;
 }
 
 .subtext-nocteria {
-  @apply text-lg font-medium text-zinc-400 sm:text-xl leading-relaxed;
+  @apply text-lg font-medium text-zinc-500 sm:text-xl leading-relaxed max-w-2xl mx-auto;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #222222;
+  background: #1a1a1a;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: #222222;
+}
+
+/* Nocteria Badge */
+.nocteria-badge {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400;
 }

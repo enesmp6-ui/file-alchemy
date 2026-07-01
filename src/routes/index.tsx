@@ -12,10 +12,10 @@ import { ArrowRight, Zap, Shield, Sparkles } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "iFlexi — Nocteria Tarzı Modern Dönüştürücü" },
+      { title: "Nocteria — Oyun Sunucunu Büyütmenin En Akıllı Yolu." },
       {
         name: "description",
-        content: "Dosyalarınızı tamamen tarayıcınızda, en hızlı ve modern şekilde dönüştürün.",
+        content: "Market, topluluk ve yönetim tek bir yerde. Oyun ekosisteminiz için yepyeni, sade ve akıllı bir deneyim.",
       },
     ],
   }),
@@ -31,136 +31,109 @@ function Index() {
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
       <Navbar />
       
-      <main className="relative overflow-hidden">
-        {/* Hero Spotlight */}
-        <div className="absolute inset-0 hero-spotlight pointer-events-none" />
-        
-        <section className="mx-auto max-w-7xl px-6 pt-40 pb-32 sm:px-10 sm:pt-56">
+      <main className="relative">
+        {/* Hero Section */}
+        <section className="relative mx-auto max-w-7xl px-6 pt-48 pb-32 sm:px-10 sm:pt-64">
+          <div className="absolute inset-0 hero-spotlight pointer-events-none" />
+          
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-center"
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center relative z-10"
           >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400"
-            >
-              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-              {t("hero.eyebrow")}
-            </motion.div>
-            
-            <h1 className="mt-12 text-nocteria">
-              <span className="block">{t("hero.titleA")}</span>
-              <span className="block opacity-40">
-                {t("hero.titleB")}
-              </span>
+            <h1 className="text-nocteria">
+              <span className="block">iFlexi: Dosya</span>
+              <span className="block text-zinc-800">Dönüşüm Merkezi</span>
             </h1>
             
-            <p className="mx-auto mt-12 max-w-2xl subtext-nocteria">
-              {t("hero.subtitle")}
+            <p className="mt-10 subtext-nocteria">
+              Hız, gizlilik ve yönetim tek bir yerde. Dosya ekosisteminiz için yepyeni, sade ve akıllı bir deneyim.
             </p>
             
-            <div className="mt-16 flex flex-wrap items-center justify-center gap-6">
-              <a href="#converter" className="nocteria-btn-primary flex items-center gap-2">
-                {t("hero.primary")}
-                <ArrowRight size={18} />
-              </a>
-              <Link to="/pricing" className="nocteria-btn-secondary">
-                {t("hero.secondary")}
-              </Link>
-            </div>
-
-            {/* Trusted By */}
-            <div className="mt-24 flex flex-col items-center gap-6">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map(i => (
-                  <img 
-                    key={i}
-                    src={`https://i.pravatar.cc/100?img=${i+10}`} 
-                    className="h-10 w-10 rounded-full border-2 border-black object-cover"
-                    alt="user"
-                  />
-                ))}
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-zinc-900 text-[10px] font-bold">
-                  +
-                </div>
+            <div className="mt-16 mx-auto max-w-md">
+              <div className="relative flex items-center p-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl">
+                <input 
+                  type="email" 
+                  placeholder="E-posta adresiniz"
+                  className="flex-1 bg-transparent px-6 py-3 text-sm font-medium outline-none placeholder:text-zinc-600"
+                />
+                <button className="nocteria-btn-primary !py-3 !px-6 whitespace-nowrap">
+                  Hemen Kayıt Ol
+                </button>
               </div>
-              <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-                1.200'den fazla kullanıcı arasına katıl.
-              </p>
+            </div>
+
+            <div className="mt-12 flex flex-col items-center gap-6">
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-3">
+                  {[11, 12, 13].map(i => (
+                    <img 
+                      key={i}
+                      src={`https://i.pravatar.cc/100?img=${i}`} 
+                      className="h-9 w-9 rounded-full border-2 border-black object-cover"
+                      alt="avatar"
+                    />
+                  ))}
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-black bg-zinc-900 text-[10px] font-black">
+                    +
+                  </div>
+                </div>
+                <p className="text-[11px] font-bold text-zinc-500 tracking-tight">
+                  <span className="text-white">1.200'den fazla</span> kullanıcı arasına katıl.
+                </p>
+              </div>
             </div>
           </motion.div>
         </section>
 
-        {/* Converter Section */}
-        <section id="converter" className="mx-auto max-w-7xl px-6 py-32 sm:px-10 scroll-mt-24">
+        {/* Converter Section - Nocteria Dashboard Style */}
+        <section id="converter" className="mx-auto max-w-6xl px-6 py-20 sm:px-10">
           <motion.div 
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="nocteria-card border-white/10 bg-[#050505]"
+            className="nocteria-card !p-2 bg-[#050505] border-white/10"
           >
-            <Converter
-              maxBytes={limit.maxBytes}
-              canConsume={limit.canConsume}
-              consumeOne={limit.consumeOne}
-              onBlocked={(msg) => setModal({ open: true, msg })}
-            />
+            <div className="rounded-[2.2rem] bg-black p-8 sm:p-12">
+              <Converter
+                maxBytes={limit.maxBytes}
+                canConsume={limit.canConsume}
+                consumeOne={limit.consumeOne}
+                onBlocked={(msg) => setModal({ open: true, msg })}
+              />
+            </div>
           </motion.div>
         </section>
 
-        {/* Features Grid */}
+        {/* Features - Nocteria Style */}
         <section className="mx-auto max-w-7xl px-6 py-32 sm:px-10">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-black uppercase tracking-tighter sm:text-6xl">Her Şey Elinizin Altında</h2>
+            <p className="mt-6 text-zinc-500 font-medium text-lg">Hızlı ve güvenli dönüşüm için ihtiyacınız olan tüm araçlar iFlexi ile bir arada.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {[
-              { icon: Zap, title: "Işık Hızında", body: "Tüm işlemler tarayıcınızda, anında gerçekleşir." },
-              { icon: Shield, title: "Tam Güvenlik", body: "Dosyalarınız asla sunucuya yüklenmez, cihazınızda kalır." },
-              { icon: Sparkles, title: "Premium Kalite", body: "En modern algoritmalarla kayıpsız dönüşüm sağlar." }
+              { title: "Premium Dönüşüm", body: "Dosyalarınızı en yüksek kalitede ve hızda dönüştürün. Komisyon yok, beklemek yok." },
+              { title: "Tam Gizlilik", body: "İşlemleriniz sadece tarayıcınızda gerçekleşir. Verileriniz asla sunucularımıza ulaşmaz." },
+              { title: "Anında Erişim", body: "Üye olun veya olmayın, saniyeler içinde dönüşüm yapmaya başlayın." }
             ].map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="nocteria-card border-white/5 bg-zinc-900/20"
-              >
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 text-white">
-                  <f.icon size={24} />
-                </div>
-                <h3 className="text-xl font-bold tracking-tight">{f.title}</h3>
+              <div key={i} className="nocteria-card group hover:border-white/20 transition-colors">
+                <h3 className="text-xl font-black uppercase tracking-tight">{f.title}</h3>
                 <p className="mt-4 text-sm font-medium leading-relaxed text-zinc-500">{f.body}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
 
-        {/* CTA Cards */}
-        <section className="mx-auto max-w-7xl px-6 py-32 sm:px-10">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <Link to="/limits" className="group">
-              <div className="nocteria-card h-full border-white/5 bg-gradient-to-br from-zinc-900/50 to-transparent p-12 transition-all group-hover:border-white/20">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">{t("nav.usage")}</p>
-                <h3 className="mt-8 text-4xl font-extrabold tracking-tighter sm:text-5xl">{t("hero.usageCta.title")}</h3>
-                <p className="mt-6 text-base font-medium text-zinc-400 leading-relaxed">{t("hero.usageCta.body")}</p>
-                <div className="mt-12 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest transition-transform group-hover:translate-x-2">
-                  {t("hero.usageCta.link")} <ArrowRight size={16} />
-                </div>
-              </div>
-            </Link>
-            <Link to="/pricing" className="group">
-              <div className="nocteria-card h-full border-white/5 bg-gradient-to-br from-zinc-900/50 to-transparent p-12 transition-all group-hover:border-white/20">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">{t("nav.pricing")}</p>
-                <h3 className="mt-8 text-4xl font-extrabold tracking-tighter sm:text-5xl">{t("hero.pricingCta.title")}</h3>
-                <p className="mt-6 text-base font-medium text-zinc-400 leading-relaxed">{t("hero.pricingCta.body")}</p>
-                <div className="mt-12 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest transition-transform group-hover:translate-x-2">
-                  {t("hero.pricingCta.link")} <ArrowRight size={16} />
-                </div>
-              </div>
+        {/* Ready CTA */}
+        <section className="mx-auto max-w-7xl px-6 py-40 sm:px-10 text-center">
+          <h2 className="text-5xl font-black uppercase tracking-tighter sm:text-8xl">Hazır mısın?</h2>
+          <p className="mt-8 text-zinc-500 text-lg font-medium">Saniyeler içinde dosya dönüşümünü profesyonel bir seviyeye taşı.</p>
+          <div className="mt-12">
+            <Link to="/pricing" className="nocteria-btn-primary inline-flex">
+              Hemen Başla
             </Link>
           </div>
         </section>
