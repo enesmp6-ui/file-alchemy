@@ -9,8 +9,8 @@ const corsHeaders = {
 };
 
 const PLAN_LIMITS = {
-  free: { weekly: 20, maxBytes: 50 * 1024 * 1024 },
-  pro: { weekly: 200, maxBytes: 500 * 1024 * 1024 },
+  free: { weekly: 50, maxBytes: 100 * 1024 * 1024 },
+  pro: { weekly: 1000, maxBytes: 2 * 1024 * 1024 * 1024 },
 } as const;
 
 type Plan = keyof typeof PLAN_LIMITS;

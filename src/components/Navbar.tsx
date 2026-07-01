@@ -37,7 +37,7 @@ export function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40 border-b border-border/60 bg-background/75 backdrop-blur-xl backdrop-saturate-150">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-300">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="iFlexi">
             <div className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
@@ -133,13 +133,13 @@ export function Navbar() {
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl md:hidden"
             >
-              <div className="space-y-1 px-4 py-4">
+              <div className="flex flex-col gap-1 p-6">
                 {LINKS.map((l) => (
                   <Link
                     key={l.to}
                     to={l.to}
                     onClick={() => setMobileOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition hover:bg-muted"
+                    className="block rounded-2xl px-4 py-3.5 text-base font-semibold text-foreground/90 transition-all active:scale-[0.98] hover:bg-muted"
                   >
                     {l.label}
                   </Link>

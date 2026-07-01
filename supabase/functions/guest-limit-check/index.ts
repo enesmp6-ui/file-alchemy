@@ -8,7 +8,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
 };
 
-const GUEST = { weekly: 5, maxBytes: 10 * 1024 * 1024 };
+const GUEST = { weekly: 10, maxBytes: 25 * 1024 * 1024 };
 
 function weekStartIstanbul(now: Date = new Date()): string {
   const tr = new Date(now.getTime() + 3 * 60 * 60 * 1000);

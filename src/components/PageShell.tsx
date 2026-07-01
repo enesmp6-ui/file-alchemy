@@ -19,7 +19,7 @@ export function PageShell({
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Navbar />
-      <main className={`mx-auto ${max} px-5 pt-32 pb-32 sm:px-8 sm:pt-40`}>
+      <main className={`mx-auto ${max} px-6 pt-28 pb-24 sm:px-8 sm:pt-40`}>
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -31,7 +31,7 @@ export function PageShell({
               {eyebrow}
             </p>
           )}
-          <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl">
+          <h1 className="mt-6 text-[2.5rem] font-bold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl">
             {title}
           </h1>
           {subtitle && (
