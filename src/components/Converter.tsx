@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useI18n } from "@/lib/I18nContext";
 import { AnimatePresence, motion } from "framer-motion";
 import JSZip from "jszip";
 import type {
@@ -81,6 +82,7 @@ export function Converter({
   }) => Promise<ConsumeResult>;
   onBlocked: (msg: string) => void;
 }) {
+  const { t } = useI18n();
   const [target, setTarget] = useState<TargetFormat>("webp");
   const [quality, setQuality] = useState(80);
   const [items, setItems] = useState<Item[]>([]);
@@ -158,11 +160,11 @@ export function Converter({
 
       const oversize = accepted.find((f) => f.size > maxBytes);
       if (oversize) {
-        onBlocked(`${oversize.name} · ${Math.round(maxBytes / (1024 * 1024))}MB üstünde.`);
+        onBlocked(`${oversize.name} · ${t("converter.blocked", { msg: `${Math.round(maxBytes / (1024 * 1024))}MB` })}`);
         return;
       }
       if (!canConsume(accepted.length)) {
-        onBlocked("Haftalık limitine ulaştın. Ücretsiz üye ol veya Pro'yu dene.");
+        onBlocked(t("limits.countdownStart"));
         return;
       }
 
@@ -197,13 +199,13 @@ export function Converter({
             status: "blocked",
             error:
               reservation.reason === "file_too_large"
-                ? "Dosya sınırı aşıldı"
-                : "Haftalık limit doldu",
+                ? t("converter.error", { msg: "file_too_large" })
+                : t("converter.error", { msg: "weekly_limit_reached" }),
           });
           onBlocked(
             reservation.reason === "file_too_large"
-              ? `${file.name} sunucunun izin verdiği boyutu aşıyor.`
-              : "Haftalık limitine ulaştın.",
+              ? t("converter.blocked", { msg: "file_too_large" })
+              : t("limits.countdownStart"),
           );
           break;
         }
@@ -356,9 +358,9 @@ export function Converter({
     <div className="glass-card p-5 sm:p-10">
       <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">Dönüştürücü</h3>
+          <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t("converter.title")}</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Tüm işlem tarayıcında. PNG · JPG · WEBP · GIF · BMP · TIFF · PDF.
+            {t("converter.description")}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -381,7 +383,7 @@ export function Converter({
       {target !== "png" && target !== "pdf" && (
         <div className="mt-6">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Kalite</span>
+            <span>{t("converter.quality")}</span>
             <span className="tabular-nums text-foreground/80">%{quality}</span>
           </div>
           <input
@@ -401,7 +403,7 @@ export function Converter({
           onClick={() => setAdvanced((v) => !v)}
           className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition hover:text-foreground"
         >
-          <span>{advanced ? "− Gelişmiş" : "+ Gelişmiş"}</span>
+          <span>{advanced ? `− ${t("converter.advanced")}` : `+ ${t("converter.advanced")}`}</span>
         </button>
         <AnimatePresence initial={false}>
           {advanced && (
@@ -416,13 +418,13 @@ export function Converter({
                 {/* Resize */}
                 <div className="rounded-2xl border border-border bg-card/50 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    Yeniden boyutlandır
+                    {t("converter.resize")}
                   </p>
                   <div className="mt-3 flex gap-2">
                     <input
                       type="number"
                       min={1}
-                      placeholder="Maks G"
+                      placeholder={t("converter.width")}
                       value={maxW}
                       onChange={(e) => setMaxW(e.target.value ? Number(e.target.value) : "")}
                       className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground/40"
@@ -430,7 +432,7 @@ export function Converter({
                     <input
                       type="number"
                       min={1}
-                      placeholder="Maks Y"
+                      placeholder={t("converter.height")}
                       value={maxH}
                       onChange={(e) => setMaxH(e.target.value ? Number(e.target.value) : "")}
                       className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground/40"
@@ -443,14 +445,14 @@ export function Converter({
                       onChange={(e) => setKeepAspect(e.target.checked)}
                       className="accent-foreground"
                     />
-                    En-boy oranını koru
+                    {t("converter.keepAspect")}
                   </label>
                 </div>
 
                 {/* Crop */}
                 <div className="rounded-2xl border border-border bg-card/50 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    Kırp
+                    {t("converter.crop")}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {(["original", "1:1", "4:3", "16:9"] as CropAspect[]).map((a) => (
@@ -463,7 +465,7 @@ export function Converter({
                             : "border border-border text-muted-foreground hover:bg-muted"
                         }`}
                       >
-                        {a === "original" ? "Orijinal" : a}
+                        {a === "original" ? t("converter.original") : a}
                       </button>
                     ))}
                   </div>
@@ -475,7 +477,7 @@ export function Converter({
                         onChange={(e) => setMergePdf(e.target.checked)}
                         className="accent-foreground"
                       />
-                      Tüm dosyaları tek PDF'te birleştir
+                      {t("converter.mergePdf")}
                     </label>
                   )}
                 </div>
@@ -483,11 +485,11 @@ export function Converter({
                 {/* Watermark */}
                 <div className="rounded-2xl border border-border bg-card/50 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    Filigran
+                    {t("converter.watermark")}
                   </p>
                   <input
                     type="text"
-                    placeholder="Metin"
+                    placeholder={t("converter.text")}
                     value={wmText}
                     onChange={(e) => setWmText(e.target.value)}
                     className="mt-3 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground/40"
@@ -510,22 +512,22 @@ export function Converter({
                       onChange={(e) => setWmSize(e.target.value as WMSize)}
                       className="rounded-lg border border-border bg-background px-2 py-1.5 outline-none"
                     >
-                      <option value="s">Küçük</option>
-                      <option value="m">Orta</option>
-                      <option value="l">Büyük</option>
+                      <option value="s">{t("common.small")}</option>
+                      <option value="m">{t("common.medium")}</option>
+                      <option value="l">{t("common.large")}</option>
                     </select>
                     <select
                       value={wmColor}
                       onChange={(e) => setWmColor(e.target.value as WMColor)}
                       className="rounded-lg border border-border bg-background px-2 py-1.5 outline-none"
                     >
-                      <option value="white">Beyaz</option>
-                      <option value="black">Siyah</option>
+                      <option value="white">{t("account.settings.themeLight")}</option>
+                      <option value="black">{t("account.settings.themeDark")}</option>
                     </select>
                   </div>
                   <div className="mt-3">
                     <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span>Opaklık</span>
+                      <span>{t("converter.opacity")}</span>
                       <span className="tabular-nums">%{Math.round(wmOpacity * 100)}</span>
                     </div>
                     <input
@@ -573,14 +575,14 @@ export function Converter({
             }
           }}
         />
-        <p className="text-lg font-medium">Dosyaları sürükleyip bırak</p>
-        <p className="mt-2 text-sm text-muted-foreground">PNG · JPG · WEBP · GIF · BMP · TIFF · PDF</p>
+        <p className="text-lg font-medium">{t("converter.dropzone")}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("converter.dropzoneSub")}</p>
       </div>
 
       {busy && (
         <div className="mt-6">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{doneCount}/{items.length} tamamlandı</span>
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>{t("converter.progress", { done: doneCount, total: items.length })}</span>
             <span className="tabular-nums">%{overallProgress}</span>
           </div>
           <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
@@ -601,14 +603,14 @@ export function Converter({
           >
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-medium text-foreground/80">
-                {items.length} Dosya Seçildi
+                {t("converter.filesSelected", { count: items.length })}
               </h4>
               {doneCount > 1 && (
                 <button
                   onClick={downloadZip}
                   className="rounded-full bg-foreground px-5 py-2 text-xs font-medium text-background transition hover:opacity-90"
                 >
-                  Tümünü ZIP Olarak İndir
+                  {t("converter.downloadZip")}
                 </button>
               )}
             </div>
@@ -628,15 +630,15 @@ export function Converter({
                             <>
                               {(r.originalSize / 1024).toFixed(0)}KB →{" "}
                               {(r.newSize / 1024).toFixed(0)}KB ·{" "}
-                              <span className="text-foreground/80">
-                                %{reduction} Tasarruf
+                                <span className="text-foreground/80">
+                                {t("converter.saved", { reduction })}
                               </span>
                             </>
                           )}
-                          {r.status === "running" && "İşleniyor…"}
-                          {r.status === "queued" && "Kuyrukta"}
-                          {r.status === "error" && `Hata: ${r.error ?? "Bilinmeyen bir sorun oluştu"}`}
-                          {r.status === "blocked" && `Engellendi · ${r.error ?? ""}`}
+                          {r.status === "running" && t("converter.processing")}
+                          {r.status === "queued" && t("converter.queued")}
+                          {r.status === "error" && t("converter.error", { msg: r.error ?? "error" })}
+                          {r.status === "blocked" && t("converter.blocked", { msg: r.error ?? "" })}
                         </p>
                         {(r.status === "running" || r.status === "queued") && (
                           <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
@@ -653,7 +655,7 @@ export function Converter({
                           download={r.outName}
                           className="shrink-0 rounded-full border border-border px-4 py-1.5 text-xs text-foreground/80 transition hover:bg-muted"
                         >
-                          İndir
+                          {t("converter.download")}
                         </a>
                       )}
                     </div>

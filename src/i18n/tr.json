@@ -21,7 +21,31 @@
     "titleB": "cihazından çıkmaz.",
     "subtitle": "iFlexi tüm dönüşümü tarayıcında yapar. Sıraya girmek, yüklemek, beklemek yok. Sürükle, bırak, indir.",
     "primary": "Dönüştürmeye Başla",
-    "secondary": "Planları Gör"
+    "secondary": "Planları Gör",
+    "features": [
+      {
+        "title": "Sıfır bulut yüklemesi",
+        "body": "Dönüşüm Canvas API ile yerel olarak gerçekleşir. Dosyaların asla cihazından ayrılmaz."
+      },
+      {
+        "title": "Hassas ayarlama",
+        "body": "Kaliteyi milimetrik hassasiyetle ayarla ve dosya boyutunun gerçek zamanlı değişimini izle."
+      },
+      {
+        "title": "Toplu · tek tıkla ZIP",
+        "body": "Düzinelerce dosyayı tek bir pakette sıkıştır — klasör yapın sana kalsın."
+      }
+    ],
+    "usageCta": {
+      "title": "Haftan, tek bakışta.",
+      "body": "Canlı sayaç, nefes alma alanı.",
+      "link": "Paneli aç →"
+    },
+    "pricingCta": {
+      "title": "Sade fiyat. Net değer.",
+      "body": "Misafir · Ücretsiz · Pro.",
+      "link": "Planları karşılaştır →"
+    }
   },
   "common": {
     "free": "Ücretsiz",
@@ -40,7 +64,10 @@
     "copy": "Kopyala",
     "copied": "Panoya kopyalandı",
     "create": "Oluştur",
-    "revoke": "İptal et"
+    "revoke": "İptal et",
+    "small": "Küçük",
+    "medium": "Orta",
+    "large": "Büyük"
   },
   "account": {
     "title": "Hesabım",
@@ -159,5 +186,95 @@
     "resources": "Kaynaklar",
     "legal": "Yasal",
     "rights": "Tüm hakları saklıdır."
+  },
+  "converter": {
+    "title": "Dönüştürücü",
+    "description": "Tüm işlem tarayıcında. PNG · JPG · WEBP · GIF · BMP · TIFF · PDF.",
+    "quality": "Kalite",
+    "advanced": "Gelişmiş",
+    "resize": "Yeniden boyutlandır",
+    "width": "Maks G",
+    "height": "Maks Y",
+    "keepAspect": "En-boy oranını koru",
+    "crop": "Kırp",
+    "original": "Orijinal",
+    "mergePdf": "Tüm dosyaları tek PDF'te birleştir",
+    "watermark": "Filigran",
+    "text": "Metin",
+    "opacity": "Opaklık",
+    "size": "Boyut",
+    "color": "Renk",
+    "dropzone": "Dosyaları sürükleyip bırak",
+    "dropzoneSub": "veya dosya seçmek için tıklayın",
+    "progress": "{done}/{total} tamamlandı",
+    "downloadZip": "Tümünü ZIP Olarak İndir",
+    "filesSelected": "{count} Dosya Seçildi",
+    "processing": "İşleniyor…",
+    "queued": "Kuyrukta",
+    "download": "İndir",
+    "saved": "%{reduction} Tasarruf",
+    "error": "Hata: {msg}",
+    "blocked": "Engellendi: {msg}"
+  },
+  "pricing": {
+    "title": "Sade fiyat.",
+    "subtitle": "Net değer.",
+    "description": "Gizli ücret yok, taahhüt yok. Her plan tarayıcında çalışan aynı güvenli motoru kullanır.",
+    "recommended": "Önerilen",
+    "faqTitle": "Sıkça merak edilenler.",
+    "soon": "Pro yükseltmesi yakında ödeme sağlayıcımız ile entegre olacak.",
+    "alreadyFree": "Zaten ücretsiz üyesin.",
+    "plans": {
+      "guest": {
+        "priceSub": "her zaman",
+        "tagline": "Hesap açmadan dene.",
+        "perks": ["Haftada 10 dosya", "Maks. 25MB / dosya", "Tarayıcıda dönüşüm", "Hiçbir veri cihazından çıkmaz"],
+        "cta": "Misafir Olarak Devam Et"
+      },
+      "free": {
+        "priceSub": "üyelikle ücretsiz",
+        "tagline": "Hafif kullanım için yeterli.",
+        "perks": ["Haftada 50 dosya", "Maks. 100MB / dosya", "Geçmiş ve tercihler", "Birden fazla cihazda senkron"],
+        "cta": "Ücretsiz Üye Ol"
+      },
+      "pro": {
+        "priceSub": "aylık · 14 gün ücretsiz dene",
+        "tagline": "Sınırları kaldır.",
+        "perks": ["Haftada 1000 dosya", "Maks. 2GB / dosya", "Öncelikli işleme kuyruğu", "Toplu ZIP indirme", "Premium destek"],
+        "cta": "Pro'yu 14 Gün Dene"
+      }
+    },
+    "faq": [
+      {
+        "q": "Dosyalarım sunucunuza yükleniyor mu?",
+        "a": "Hayır. Tüm dönüşüm tarayıcında gerçekleşir. Hiçbir bayt cihazından ayrılmaz."
+      },
+      {
+        "q": "Pro denemesi otomatik ücretlendiriyor mu?",
+        "a": "Hayır. 14 günlük deneme süresince istediğin an iptal edebilirsin, kart bilgisi gerekmez."
+      },
+      {
+        "q": "Plan değiştirebilir miyim?",
+        "a": "Evet. Hesap panelinden tek tıkla yükseltebilir veya düşürebilirsin."
+      },
+      {
+        "q": "Haftalık limit ne zaman yenilenir?",
+        "a": "İlk dönüşümünden tam 7 gün sonra otomatik olarak sıfırlanır."
+      }
+    ]
+  },
+  "limits": {
+    "title": "Haftan, tek bakışta.",
+    "description": "Adil kullanım için her plan haftalık bir dönüşüm bütçesiyle gelir. Bütçen, ilk dönüşümünden tam 7 gün sonra otomatik yenilenir.",
+    "status": "Durum",
+    "guestCta": "Giriş yaparak limitini büyüt",
+    "proActive": "Pro üyeliğin aktif",
+    "freeActive": "Ücretsiz üye",
+    "thisWeek": "Bu hafta {used} / {total} dosya",
+    "maxPerFile": "Maks. {mb}MB / dosya",
+    "countdownSuffix": "limitin yenilenmesine kaldı.",
+    "countdownStart": "İlk dönüşümünle birlikte haftalık sayaç başlar.",
+    "perWeek": "dosya / hafta",
+    "upgrade": "Limiti Yükselt"
   }
 }

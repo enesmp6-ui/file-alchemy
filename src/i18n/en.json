@@ -21,7 +21,31 @@
     "titleB": "never leave your device.",
     "subtitle": "iFlexi runs every conversion locally in your browser. No queues, no uploads, no waiting. Drag, drop, download.",
     "primary": "Start converting",
-    "secondary": "See plans"
+    "secondary": "See plans",
+    "features": [
+      {
+        "title": "Zero cloud upload",
+        "body": "Conversion happens locally via the Canvas API. Your files never leave your device."
+      },
+      {
+        "title": "Cinematic fine-tuning",
+        "body": "Dial in quality with millimetric precision and watch file size update in real time."
+      },
+      {
+        "title": "Batch · one-click ZIP",
+        "body": "Compress dozens of files into one neat package — your folder structure stays yours."
+      }
+    ],
+    "usageCta": {
+      "title": "Your week, at a glance.",
+      "body": "Live counter, breathing room.",
+      "link": "Open panel →"
+    },
+    "pricingCta": {
+      "title": "Simple pricing. Clear value.",
+      "body": "Guest · Free · Pro.",
+      "link": "Compare plans →"
+    }
   },
   "common": {
     "free": "Free",
@@ -40,7 +64,10 @@
     "copy": "Copy",
     "copied": "Copied to clipboard",
     "create": "Create",
-    "revoke": "Revoke"
+    "revoke": "Revoke",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large"
   },
   "account": {
     "title": "Account",
@@ -159,5 +186,95 @@
     "resources": "Resources",
     "legal": "Legal",
     "rights": "All rights reserved."
+  },
+  "converter": {
+    "title": "Converter",
+    "description": "All processing in your browser. PNG · JPG · WEBP · GIF · BMP · TIFF · PDF.",
+    "quality": "Quality",
+    "advanced": "Advanced",
+    "resize": "Resize",
+    "width": "Max W",
+    "height": "Max H",
+    "keepAspect": "Keep aspect ratio",
+    "crop": "Crop",
+    "original": "Original",
+    "mergePdf": "Merge all files into one PDF",
+    "watermark": "Watermark",
+    "text": "Text",
+    "opacity": "Opacity",
+    "size": "Size",
+    "color": "Color",
+    "dropzone": "Drag and drop files",
+    "dropzoneSub": "or click to select files",
+    "progress": "{done}/{total} completed",
+    "downloadZip": "Download All as ZIP",
+    "filesSelected": "{count} Files Selected",
+    "processing": "Processing…",
+    "queued": "Queued",
+    "download": "Download",
+    "saved": "Saved {reduction}%",
+    "error": "Error: {msg}",
+    "blocked": "Blocked: {msg}"
+  },
+  "pricing": {
+    "title": "Simple pricing.",
+    "subtitle": "Clear value.",
+    "description": "No hidden fees, no commitments. Every plan uses the same secure engine running in your browser.",
+    "recommended": "Recommended",
+    "faqTitle": "Frequently asked questions.",
+    "soon": "Pro upgrade will soon be integrated with our payment provider.",
+    "alreadyFree": "You are already a free member.",
+    "plans": {
+      "guest": {
+        "priceSub": "always",
+        "tagline": "Try without an account.",
+        "perks": ["10 files per week", "Max. 25MB / file", "In-browser conversion", "No data leaves your device"],
+        "cta": "Continue as Guest"
+      },
+      "free": {
+        "priceSub": "free with account",
+        "tagline": "Enough for light use.",
+        "perks": ["50 files per week", "Max. 100MB / file", "History and preferences", "Sync across multiple devices"],
+        "cta": "Sign Up for Free"
+      },
+      "pro": {
+        "priceSub": "monthly · 14-day free trial",
+        "tagline": "Remove the limits.",
+        "perks": ["1000 files per week", "Max. 2GB / file", "Priority processing queue", "Batch ZIP download", "Premium support"],
+        "cta": "Try Pro for 14 Days"
+      }
+    },
+    "faq": [
+      {
+        "q": "Are my files uploaded to your server?",
+        "a": "No. All conversion happens in your browser. Not a single byte leaves your device."
+      },
+      {
+        "q": "Does the Pro trial charge automatically?",
+        "a": "No. You can cancel anytime during the 14-day trial, no credit card required."
+      },
+      {
+        "q": "Can I change my plan?",
+        "a": "Yes. You can upgrade or downgrade with one click from your account panel."
+      },
+      {
+        "q": "When does the weekly limit reset?",
+        "a": "It resets automatically exactly 7 days after your first conversion."
+      }
+    ]
+  },
+  "limits": {
+    "title": "Your week, at a glance.",
+    "description": "For fair use, every plan comes with a weekly conversion budget. Your budget automatically resets exactly 7 days after your first conversion.",
+    "status": "Status",
+    "guestCta": "Sign in to increase your limit",
+    "proActive": "Pro membership active",
+    "freeActive": "Free member",
+    "thisWeek": "This week {used} / {total} files",
+    "maxPerFile": "Max. {mb}MB / file",
+    "countdownSuffix": "remaining until limit resets.",
+    "countdownStart": "Weekly counter starts with your first conversion.",
+    "perWeek": "files / week",
+    "upgrade": "Upgrade Limit"
   }
 }

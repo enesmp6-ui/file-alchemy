@@ -80,20 +80,7 @@ function Index() {
         </div>
 
         <section className="mt-32 grid grid-cols-1 gap-6 sm:grid-cols-3">
-          {[
-            {
-              title: "Zero cloud upload",
-              body: "Conversion happens locally via the Canvas API. Your files never leave your device.",
-            },
-            {
-              title: "Cinematic fine-tuning",
-              body: "Dial in quality with millimetric precision and watch file size update in real time.",
-            },
-            {
-              title: "Batch · one-click ZIP",
-              body: "Compress dozens of files into one neat package — your folder structure stays yours.",
-            },
-          ].map((b) => (
+          {(t("hero.features", { returnObjects: true }) as { title: string; body: string }[]).map((b) => (
             <GlassCard
               key={b.title}
               title={b.title}
@@ -114,11 +101,11 @@ function Index() {
                 {t("nav.usage")}
               </p>
               <h3 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-                Your week, at a glance.
+                {t("hero.usageCta.title")}
               </h3>
-              <p className="mt-3 text-base font-medium text-muted-foreground">Live counter, breathing room.</p>
+              <p className="mt-3 text-base font-medium text-muted-foreground">{t("hero.usageCta.body")}</p>
               <span className="mt-8 inline-block text-sm font-bold text-foreground/60 transition group-hover:text-foreground">
-                Open panel →
+                {t("hero.usageCta.link")}
               </span>
             </GlassCard>
           </Link>
@@ -131,11 +118,11 @@ function Index() {
                 {t("nav.pricing")}
               </p>
               <h3 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-                Simple pricing. Clear value.
+                {t("hero.pricingCta.title")}
               </h3>
-              <p className="mt-3 text-base font-medium text-muted-foreground">Guest · Free · Pro.</p>
+              <p className="mt-3 text-base font-medium text-muted-foreground">{t("hero.pricingCta.body")}</p>
               <span className="mt-8 inline-block text-sm font-bold text-foreground/60 transition group-hover:text-foreground">
-                Compare plans →
+                {t("hero.pricingCta.link")}
               </span>
             </GlassCard>
           </Link>

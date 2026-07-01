@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { PageShell, GlassCard } from "@/components/PageShell";
 import { TIERS, useWeeklyLimit, type Tier } from "@/lib/useWeeklyLimit";
+import { useI18n } from "@/lib/I18nContext";
 
 export const Route = createFileRoute("/limits")({
   head: () => ({
@@ -24,42 +25,39 @@ export const Route = createFileRoute("/limits")({
 
 function LimitsPage() {
   const limit = useWeeklyLimit();
+  const { t } = useI18n();
   const percent = Math.min(100, (limit.used / limit.config.weekly) * 100);
 
   return (
     <PageShell
-      eyebrow="Kullanım Sınırı"
-      title="Haftan, tek bakışta."
-      subtitle="Adil kullanım için her plan haftalık bir dönüşüm bütçesiyle gelir. Bütçen, ilk dönüşümünden tam 7 gün sonra otomatik yenilenir."
+      eyebrow={t("nav.usage")}
+      title={t("limits.title")}
+      subtitle={t("limits.description")}
     >
       <GlassCard className="relative overflow-hidden">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">Durum</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">{t("limits.status")}</p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
-              {limit.config.label}
+              {t(`common.${limit.tier}`)}
             </h2>
           </div>
           <div className="inline-flex shrink-0 rounded-full bg-muted px-4 py-1.5 text-xs font-semibold text-muted-foreground">
             {limit.tier === "guest"
-              ? "Giriş yaparak limitini büyüt"
+              ? t("limits.guestCta")
               : limit.tier === "pro"
-                ? "Pro üyeliğin aktif"
-                : "Ücretsiz üye"}
+                ? t("limits.proActive")
+                : t("limits.freeActive")}
           </div>
         </div>
 
         <div className="mt-12">
           <div className="flex items-baseline justify-between text-sm">
             <span className="text-muted-foreground font-medium">
-              Bu hafta{" "}
-              <span className="text-foreground font-bold">
-                {limit.used} / {limit.config.weekly}
-              </span>{" "}
-              dosya
+              {t("limits.thisWeek", { used: limit.used, total: limit.config.weekly })}
             </span>
             <span className="text-xs font-semibold text-muted-foreground">
-              Maks. {limit.config.maxMB}MB / dosya
+              {t("limits.maxPerFile", { mb: limit.config.maxMB })}
             </span>
           </div>
           <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-muted">
@@ -74,7 +72,11 @@ function LimitsPage() {
 
         <div className="mt-12 grid grid-cols-3 gap-6 border-t border-border pt-10 text-center">
           {(["days", "hours", "minutes"] as const).map((k) => {
-            const labels = { days: "Gün", hours: "Saat", minutes: "Dakika" };
+            const labels = {
+              days: t("account.overview.resetIn").split(" ")[1],
+              hours: t("account.overview.resetIn").split(" ")[3],
+              minutes: t("account.overview.resetIn").split(" ")[3] === "saat" ? "Dakika" : "Min",
+            };
             const v = limit.countdown ? limit.countdown[k] : 0;
             return (
               <div key={k}>
@@ -90,8 +92,8 @@ function LimitsPage() {
         </div>
         <p className="mt-8 text-center text-sm font-medium text-muted-foreground">
           {limit.countdown
-            ? "limitin yenilenmesine kaldı."
-            : "İlk dönüşümünle birlikte haftalık sayaç başlar."}
+            ? t("limits.countdownSuffix")
+            : t("limits.countdownStart")}
         </p>
       </GlassCard>
 
@@ -109,16 +111,16 @@ function LimitsPage() {
               }`}
             >
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
-                {c.label}
+                {t(`common.${t as Tier}`)}
               </p>
               <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">
                 {c.weekly}{" "}
                 <span className="text-sm font-medium text-muted-foreground">
-                  dosya / hafta
+                  {t("limits.perWeek")}
                 </span>
               </p>
               <p className="mt-1 text-sm font-medium text-muted-foreground">
-                Maks. {c.maxMB}MB / dosya
+                {t("limits.maxPerFile", { mb: c.maxMB })}
               </p>
             </GlassCard>
           );
@@ -130,7 +132,7 @@ function LimitsPage() {
           to="/pricing"
           className="inline-flex rounded-full bg-foreground px-10 py-4 text-sm font-bold text-background transition-all duration-300 hover:opacity-90 hover:scale-105"
         >
-          Limiti Yükselt
+          {t("limits.upgrade")}
         </Link>
       </div>
     </PageShell>

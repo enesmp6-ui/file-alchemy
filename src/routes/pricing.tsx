@@ -5,6 +5,7 @@ import { PageShell, GlassCard } from "@/components/PageShell";
 import { PLANS } from "@/lib/plans";
 import { TIERS } from "@/lib/useWeeklyLimit";
 import { useAuth } from "@/lib/AuthContext";
+import { useI18n } from "@/lib/I18nContext";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/pricing")({
 
 function PricingPage() {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   const onChoose = (tier: "guest" | "free" | "pro") => {
     if (tier === "guest") return;
@@ -37,19 +39,17 @@ function PricingPage() {
       return;
     }
     if (tier === "pro") {
-      toast(
-        "Pro yükseltmesi yakında ödeme sağlayıcımız ile entegre olacak.",
-      );
+      toast(t("pricing.soon"));
     } else {
-      toast.success("Zaten ücretsiz üyesin.");
+      toast.success(t("pricing.alreadyFree"));
     }
   };
 
   return (
     <PageShell
-      eyebrow="Planlar"
-      title={<>Sade fiyat.<br /><span className="text-muted-foreground">Net değer.</span></>}
-      subtitle="Gizli ücret yok, taahhüt yok. Her plan tarayıcında çalışan aynı güvenli motoru kullanır."
+      eyebrow={t("nav.pricing")}
+      title={<>{t("pricing.title")}<br /><span className="text-muted-foreground">{t("pricing.subtitle")}</span></>}
+      subtitle={t("pricing.description")}
     >
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {PLANS.map((p, i) => (
@@ -63,22 +63,22 @@ function PricingPage() {
             <GlassCard className={`h-full flex flex-col ${p.featured ? "pro-glow border-foreground/10" : ""}`}>
               {p.featured && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-background">
-                  Önerilen
+                  {t("pricing.recommended")}
                 </span>
               )}
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
-                {TIERS[p.tier].label}
+                {t(`common.${p.tier}`)}
               </p>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-4xl font-bold tracking-tight text-foreground">{p.price}</span>
-                {p.priceSub && (
-                  <span className="text-xs text-muted-foreground">{p.priceSub}</span>
-                )}
+                <span className="text-xs text-muted-foreground">
+                  {t(`pricing.plans.${p.tier}.priceSub`)}
+                </span>
               </div>
-              <p className="mt-3 text-sm text-muted-foreground">{p.tagline}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t(`pricing.plans.${p.tier}.tagline`)}</p>
 
               <ul className="mt-10 flex-1 space-y-4 text-sm">
-                {p.perks.map((perk) => (
+                {(t(`pricing.plans.${p.tier}.perks`, { returnObjects: true }) as string[]).map((perk) => (
                   <li key={perk} className="flex items-start gap-3 text-foreground/80">
                     <Check />
                     <span>{perk}</span>
@@ -94,7 +94,7 @@ function PricingPage() {
                     : "bg-muted text-foreground hover:bg-muted/80"
                 }`}
               >
-                {p.cta}
+                {t(`pricing.plans.${p.tier}.cta`)}
               </button>
             </GlassCard>
           </motion.div>
@@ -104,27 +104,10 @@ function PricingPage() {
       {/* FAQ */}
       <section className="mt-32">
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Sıkça merak edilenler.
+          {t("pricing.faqTitle")}
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {[
-            {
-              q: "Dosyalarım sunucunuza yükleniyor mu?",
-              a: "Hayır. Tüm dönüşüm tarayıcında, Canvas API ile gerçekleşir. Hiçbir bayt cihazından ayrılmaz.",
-            },
-            {
-              q: "Pro denemesi otomatik ücretlendiriyor mu?",
-              a: "Hayır. 14 günlük deneme süresince istediğin an iptal edebilirsin, kart bilgisi gerekmez.",
-            },
-            {
-              q: "Plan değiştirebilir miyim?",
-              a: "Evet. Hesap panelinden tek tıkla yükseltebilir veya düşürebilirsin.",
-            },
-            {
-              q: "Haftalık limit ne zaman yenilenir?",
-              a: "İlk dönüşümünden tam 7 gün sonra otomatik olarak sıfırlanır.",
-            },
-          ].map((f) => (
+          {(t("pricing.faq", { returnObjects: true }) as { q: string; a: string }[]).map((f) => (
             <GlassCard key={f.q} title={f.q}>
               <p className="mt-2 text-base text-muted-foreground">{f.a}</p>
             </GlassCard>
