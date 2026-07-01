@@ -44,7 +44,7 @@ export function Navbar() {
               <span className="text-[13px] font-bold tracking-tight">i</span>
             </div>
             <span className="text-sm font-medium tracking-tight">
-              <span className="rgb-text">iFlexi</span><span className="text-muted-foreground">.com</span>
+              <span>iFlexi</span><span className="text-muted-foreground">.com</span>
             </span>
           </Link>
 

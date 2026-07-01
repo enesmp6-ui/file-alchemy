@@ -45,7 +45,7 @@ function Index() {
             {t("hero.eyebrow")}
           </p>
           <h1 className="mt-8 text-5xl font-medium leading-[1.05] tracking-tight sm:text-7xl md:text-[6rem] lg:text-[7rem]">
-            <span className="rgb-text">{t("hero.titleA")}</span>
+            <span>{t("hero.titleA")}</span>
             <br />
             <span className="apple-text-gradient">
               {t("hero.titleB")}
