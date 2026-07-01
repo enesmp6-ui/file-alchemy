@@ -10,7 +10,7 @@ const KEY = "iflexi:locale";
 type Ctx = {
   locale: Locale;
   setLocale: (l: Locale) => void;
-  t: (path: string, vars?: Record<string, string | number>) => string;
+  t: (path: string, vars?: Record<string, any>) => any;
 };
 
 const I18nContext = createContext<Ctx | null>(null);
@@ -23,7 +23,7 @@ function resolveInitial(): Locale {
   return lang.startsWith("tr") ? "tr" : "en";
 }
 
-function lookup(dict: Record<string, unknown>, path: string): string | undefined {
+function lookup(dict: Record<string, unknown>, path: string): any {
   const parts = path.split(".");
   let cur: unknown = dict;
   for (const p of parts) {
@@ -33,7 +33,7 @@ function lookup(dict: Record<string, unknown>, path: string): string | undefined
       return undefined;
     }
   }
-  return typeof cur === "string" ? cur : undefined;
+  return cur;
 }
 
 function interpolate(s: string, vars?: Record<string, string | number>) {
@@ -64,9 +64,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   };
 
   const t = useMemo(() => {
-    return (path: string, vars?: Record<string, string | number>) => {
+    return (path: string, vars?: Record<string, any>) => {
       const hit = lookup(DICTS[locale], path) ?? lookup(DICTS.en, path);
-      return interpolate(hit ?? path, vars);
+      if (typeof hit === "string") {
+        return interpolate(hit, vars);
+      }
+      return hit ?? path;
     };
   }, [locale]);
 

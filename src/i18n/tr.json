@@ -228,7 +228,7 @@
       "guest": {
         "priceSub": "her zaman",
         "tagline": "Hesap açmadan dene.",
-        "perks": ["Haftada 10 dosya", "Maks. 25MB / dosya", "Tarayıcıda dönüşüm", "Hiçbir veri cihazından çıkmaz"],
+        "perks": ["Haftada 3 dosya", "Maks. 5MB / dosya", "Tarayıcıda dönüşüm", "Hiçbir veri cihazından çıkmaz"],
         "cta": "Misafir Olarak Devam Et"
       },
       "free": {
@@ -267,7 +267,7 @@
     "title": "Haftan, tek bakışta.",
     "description": "Adil kullanım için her plan haftalık bir dönüşüm bütçesiyle gelir. Bütçen, ilk dönüşümünden tam 7 gün sonra otomatik yenilenir.",
     "status": "Durum",
-    "guestCta": "İşlem yapmak için giriş yapmalısın",
+    "guestCta": "Giriş yaparak limitini büyüt",
     "proActive": "Pro üyeliğin aktif",
     "freeActive": "Ücretsiz üye",
     "thisWeek": "Bu hafta {used} / {total} dosya",

@@ -228,7 +228,7 @@
       "guest": {
         "priceSub": "always",
         "tagline": "Try without an account.",
-        "perks": ["10 files per week", "Max. 25MB / file", "In-browser conversion", "No data leaves your device"],
+        "perks": ["3 files per week", "Max. 5MB / file", "In-browser conversion", "No data leaves your device"],
         "cta": "Continue as Guest"
       },
       "free": {
@@ -267,7 +267,7 @@
     "title": "Your week, at a glance.",
     "description": "For fair use, every plan comes with a weekly conversion budget. Your budget automatically resets exactly 7 days after your first conversion.",
     "status": "Status",
-    "guestCta": "Sign in to start converting",
+    "guestCta": "Sign in to increase your limit",
     "proActive": "Pro membership active",
     "freeActive": "Free member",
     "thisWeek": "This week {used} / {total} files",

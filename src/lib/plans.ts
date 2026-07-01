@@ -12,6 +12,19 @@ export type Plan = {
 
 export const PLANS: Plan[] = [
   {
+    tier: "guest",
+    price: "₺0",
+    priceSub: "always",
+    tagline: "Try without an account.",
+    perks: [
+      "3 files per week",
+      "Max. 5MB / file",
+      "In-browser conversion",
+      "No data leaves your device",
+    ],
+    cta: "Continue as Guest",
+  },
+  {
     tier: "free",
     price: "₺0",
     priceSub: "free with account",
