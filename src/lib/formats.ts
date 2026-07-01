@@ -29,21 +29,25 @@ export function detectKind(file: File): SourceKind {
   return "unknown";
 }
 
+type UtifIfd = { width: number; height: number };
+type UtifLib = {
+  decode: (b: Uint8Array) => UtifIfd[];
+  decodeImage: (b: Uint8Array, ifd: UtifIfd) => void;
+  toRGBA8: (ifd: UtifIfd) => Uint8Array;
+};
+
 /** Decode a TIFF file to a PNG blob using UTIF (main thread). */
 export async function tiffToPngBlob(file: File): Promise<Blob> {
-  const UTIFmod = await import("utif");
-  const UTIF = (UTIFmod as unknown as { default?: typeof UTIFmod }).default ?? UTIFmod;
+  const mod = (await import("utif")) as unknown as {
+    default?: UtifLib;
+  } & UtifLib;
+  const UTIF: UtifLib = mod.default ?? mod;
   const buf = new Uint8Array(await file.arrayBuffer());
-  // @ts-expect-error — utif has loose typings
   const ifds = UTIF.decode(buf);
-  // @ts-expect-error — utif types
   UTIF.decodeImage(buf, ifds[0]);
-  // @ts-expect-error — utif types
   const rgba = UTIF.toRGBA8(ifds[0]);
-  // @ts-expect-error — utif types
-  const w = ifds[0].width as number;
-  // @ts-expect-error — utif types
-  const h = ifds[0].height as number;
+  const w = ifds[0].width;
+  const h = ifds[0].height;
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
