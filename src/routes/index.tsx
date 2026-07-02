@@ -113,8 +113,7 @@ function Index() {
             transition={{ duration: 0.8 }}
             className="display-md text-center"
           >
-            {t("pricing.subtitle") ? t("hero.features") && "" : ""}
-            {t("limits.title")}
+            {t("hero.usageCta.title")}
           </motion.h2>
 
           <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
