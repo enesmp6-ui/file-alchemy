@@ -4,62 +4,79 @@ import { useI18n, type Locale } from "@/lib/I18nContext";
 export function Footer() {
   const { locale, setLocale, t } = useI18n();
   const other: Locale = locale === "en" ? "tr" : "en";
+  const year = new Date().getFullYear();
+
+  const sections = [
+    {
+      title: t("footer.product"),
+      links: [
+        { to: "/", label: t("nav.converter") },
+        { to: "/pricing", label: t("nav.pricing") },
+        { to: "/limits", label: t("nav.usage") },
+      ],
+    },
+    {
+      title: t("footer.company"),
+      links: [
+        { to: "/about", label: t("nav.about") },
+        { to: "/contact", label: "Contact" },
+        { to: "/status", label: "Status" },
+      ],
+    },
+    {
+      title: t("footer.resources"),
+      links: [
+        { to: "/help", label: t("nav.help") },
+        { to: "/faq", label: "FAQ" },
+        { to: "/security", label: t("nav.security") },
+      ],
+    },
+    {
+      title: t("footer.legal"),
+      links: [
+        { to: "/privacy", label: "Privacy" },
+        { to: "/terms", label: "Terms" },
+        { to: "/cookies", label: "Cookies" },
+      ],
+    },
+  ];
 
   return (
-    <footer className="border-t border-white/5 bg-black py-24">
-      <div className="mx-auto max-w-7xl px-6 sm:px-10">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-          <div>
-            <Link to="/" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center">
-                <span className="text-black font-black text-lg">i</span>
-              </div>
-              <span className="text-lg font-black tracking-tighter uppercase">iFlexi</span>
-            </Link>
-            <p className="mt-10 max-w-sm text-sm font-medium leading-relaxed text-zinc-500">
-              Sadece basit bir dosya dönüştürücü değil; verilerinizi anlık işleyen güvenli bir altyapı ekosistemi. Dosya yönetiminizi yeni nesil SaaS standartlarıyla geleceğe taşıyın.
-            </p>
-            <div className="mt-10 flex gap-6">
-              <div className="h-6 w-6 rounded-lg bg-white/5 border border-white/10" />
-              <div className="h-6 w-6 rounded-lg bg-white/5 border border-white/10" />
-              <div className="h-6 w-6 rounded-lg bg-white/5 border border-white/10" />
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-12 sm:grid-cols-3">
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Ürün</h4>
-              <ul className="mt-8 space-y-5">
-                <li><Link to="/pricing" className="text-sm font-medium text-zinc-500 hover:text-white transition-colors">Fiyatlandırma</Link></li>
-                <li><Link to="/limits" className="text-sm font-medium text-zinc-500 hover:text-white transition-colors">Kullanım</Link></li>
+    <footer className="border-t border-white/[0.06] bg-black">
+      <div className="mx-auto max-w-[1024px] px-6 py-16">
+        <p className="max-w-md text-[12px] leading-relaxed text-[#86868b]">
+          {t("footer.tagline")}
+        </p>
+
+        <div className="mt-12 grid grid-cols-2 gap-10 sm:grid-cols-4">
+          {sections.map((s) => (
+            <div key={s.title}>
+              <h4 className="text-[12px] font-normal text-[#f5f5f7]">{s.title}</h4>
+              <ul className="mt-4 space-y-2.5">
+                {s.links.map((l) => (
+                  <li key={l.to + l.label}>
+                    <Link
+                      to={l.to as any}
+                      className="text-[12px] font-light text-[#86868b] hover:text-[#f5f5f7] transition-colors"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Destek</h4>
-              <ul className="mt-8 space-y-5">
-                <li><Link to="/about" className="text-sm font-medium text-zinc-500 hover:text-white transition-colors">Hakkımızda</Link></li>
-                <li><Link to="/" className="text-sm font-medium text-zinc-500 hover:text-white transition-colors">Dökümantasyon</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Yasal</h4>
-              <ul className="mt-8 space-y-5">
-                <li><Link to="/" className="text-sm font-medium text-zinc-500 hover:text-white transition-colors">Gizlilik</Link></li>
-                <li><Link to="/" className="text-sm font-medium text-zinc-500 hover:text-white transition-colors">Şartlar</Link></li>
-              </ul>
-            </div>
-          </div>
+          ))}
         </div>
-        
-        <div className="mt-24 border-t border-white/5 pt-12 flex flex-col sm:flex-row justify-between items-center gap-8">
-          <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
-            © 2024 iFlexi. Tüm hakları saklıdır.
+
+        <div className="mt-14 flex flex-col gap-4 border-t border-white/[0.06] pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[12px] font-light text-[#6e6e73]">
+            Copyright © {year} iFlexi. {t("footer.rights")}
           </p>
-          <button 
+          <button
             onClick={() => setLocale(other)}
-            className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 hover:text-white transition-colors"
+            className="text-[12px] font-light text-[#86868b] hover:text-[#f5f5f7] transition-colors self-start sm:self-auto"
           >
-            {locale.toUpperCase()} / {other.toUpperCase()}
+            {locale === "en" ? "United States (English)" : "Türkiye (Türkçe)"} · {other.toUpperCase()}
           </button>
         </div>
       </div>
